@@ -1,0 +1,35 @@
+{
+    "name": "Elevator Dispatch Workshop",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+    "forwardPorts": [
+        7000,
+        5432
+    ],
+    "portsAttributes": {
+        "7000": {
+            "label": "Elevator dashboard",
+            "onAutoForward": "openBrowser"
+        },
+        "5432": {
+            "label": "Postgres"
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/sshd:1": {
+            "version": "latest"
+        }
+    },
+    "postCreateCommand": "cd workspace && python -m venv .venv && . .venv/bin/activate && python -m pip install -r requirements.txt && npm install",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-azuretools.vscode-docker",
+                "GitHub.copilot",
+                "GitHub.copilot-chat"
+            ]
+        }
+    }
+}
