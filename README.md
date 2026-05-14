@@ -108,6 +108,8 @@ pipeline, and Azure IoT Edge deployment — all with GitHub Copilot as an active
 
 ```bash
 # 1. Clone or open in Codespaces
+# Note: this is the completed workshop solution repository. A starter template may be available
+# from your facilitator. Replace the URL below with your assigned repository if different.
 git clone https://github.com/ms-mfg-community/ghcp-digital-patterning-system-completed.git
 cd ghcp-digital-patterning-system-completed/workspace
 
@@ -242,10 +244,11 @@ and Copilot coding capabilities. See individual agent YAML files for trigger con
 ## Azure Deployment
 
 The production Millitron pattern engine is deployed to **Azure Container Apps** with an optional **Azure Database for
-PostgreSQL Flexible Server** for event persistence. The reference workshop endpoint is:
+PostgreSQL Flexible Server** for event persistence. The reference workshop endpoint below is an example — replace it
+with your own deployment URL after running `azd deploy`:
 
 ```
-https://ca-patterning-dev.bluetree-41095b7a.eastus2.azurecontainerapps.io/
+https://ca-patterning-dev.<your-unique-suffix>.eastus2.azurecontainerapps.io/
 ```
 
 Deployment commands:
