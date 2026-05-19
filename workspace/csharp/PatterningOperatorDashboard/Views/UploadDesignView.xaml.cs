@@ -70,6 +70,7 @@ public partial class UploadDesignView : UserControl
             viewModel.Metadata = analyzed.Metadata;
             viewModel.Palette = analyzed.Palette;
             SessionState.Current.Concept = analyzed.Concept;
+            SessionState.Current.Metadata = analyzed.Metadata;
             SessionState.Current.Palette = analyzed.Palette;
             viewModel.StatusMessage = $"Analyzed {fileInfo.Name} — {metadata.WidthPx} × {metadata.HeightPx}, {palette.Colors.Count} palette colors.";
         }
@@ -123,6 +124,7 @@ public partial class UploadDesignView : UserControl
             viewModel.Metadata = analyzed.Metadata;
             viewModel.Palette = analyzed.Palette;
             SessionState.Current.Concept = analyzed.Concept;
+            SessionState.Current.Metadata = analyzed.Metadata;
             SessionState.Current.Palette = analyzed.Palette;
             viewModel.StatusMessage = $"Loaded sample '{sourceName}' — {widthPx} × {heightPx}, {palette.Colors.Count} synthetic palette colors.";
         }

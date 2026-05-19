@@ -22,6 +22,7 @@ public sealed class SessionState
     }
 
     private DesignConcept? concept;
+    private ImageMetadata? metadata;
     private ColorPalette? palette;
     private IReadOnlyList<ManufacturingChannel> channels;
     private IReadOnlyList<ChannelMapping> mappings = [];
@@ -42,6 +43,13 @@ public sealed class SessionState
     {
         get => concept;
         set { concept = value; }
+    }
+
+    /// <summary>Image metadata for the active concept (may be null until upload completes).</summary>
+    public ImageMetadata? Metadata
+    {
+        get => metadata;
+        set { metadata = value; }
     }
 
     /// <summary>Active palette extracted from the uploaded design.</summary>
