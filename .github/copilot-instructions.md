@@ -295,3 +295,8 @@ python -m uvicorn api.server:app --reload --port 7000
 - Preserve existing user or formatter edits when updating files.
 - For Markdown prompts, PRDs, and documentation prose, prefer a wider wrap around 110 to 120 columns so text uses the editor width;
 	avoid narrow CRLF-style wrapping unless matching an existing table, code block, or template section.
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->

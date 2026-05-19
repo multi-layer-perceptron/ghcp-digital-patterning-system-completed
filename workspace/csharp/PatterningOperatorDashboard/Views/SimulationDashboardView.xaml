@@ -1,0 +1,19 @@
+<UserControl x:Class="PatterningOperatorDashboard.Views.SimulationDashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Grid Margin="16">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <TextBlock Text="Production Simulation" FontSize="20" FontWeight="SemiBold" />
+    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,12,0,12">
+      <Button Content="Start" Width="80" Margin="0,0,8,0" />
+      <Button Content="Pause" Width="80" Margin="0,0,8,0" />
+      <Button Content="Resume" Width="80" Margin="0,0,8,0" />
+      <Button Content="Reset" Width="80" />
+    </StackPanel>
+    <ListView Grid.Row="2" ItemsSource="{Binding Diagnostics}" />
+  </Grid>
+</UserControl>

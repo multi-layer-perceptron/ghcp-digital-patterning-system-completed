@@ -1,6 +1,6 @@
 # Skill: PLC Integration
 
-This skill scaffolds and validates the Millitron PLC dye-head control integration layer for the digital patterning
+This skill scaffolds and validates the digital patterning PLC dye-head control integration layer for the digital patterning
 workshop. It generates IEC 61131-3 Structured Text stubs and a Python simulation harness that exercises the PLC
 control logic over a TCP loopback socket.
 
@@ -101,4 +101,4 @@ Response from PLC stub:
 - Prompt: [.github/prompts/10.01.plc-dye-head-control.prompt.md](../../prompts/10.01.plc-dye-head-control.prompt.md)
 - Instructions: [.github/instructions/digital-patterning.instructions.md](../../instructions/digital-patterning.instructions.md)
 - FPGA skill: [.github/skills/fpga-simulation/SKILL.md](../fpga-simulation/SKILL.md)
-- PRD: [docs/prd-digital-patterning-system.md](../../../../docs/prd-digital-patterning-system.md)
+- PRD: [docs/prd-specify-digital-patterning-system.md](../../../../docs/prd-specify-digital-patterning-system.md)

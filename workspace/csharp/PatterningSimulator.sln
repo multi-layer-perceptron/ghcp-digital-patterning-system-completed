@@ -1,0 +1,16 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatterningOperatorDashboard", "PatterningOperatorDashboard\PatterningOperatorDashboard.csproj", "{0C5B75A1-9B38-4C8B-9DF6-5D41C9383C01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patterning.Core", "Patterning.Core\Patterning.Core.csproj", "{BEA19E9B-87B3-4767-A21A-A14DBB092C01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patterning.Infrastructure", "Patterning.Infrastructure\Patterning.Infrastructure.csproj", "{6E2910CA-3F50-4B37-A9C2-B90CE0D9B401}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patterning.Tests", "Patterning.Tests\Patterning.Tests.csproj", "{D3BEB987-FB56-4B2E-8505-0CB706087501}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patterning.GatewayHost", "Patterning.GatewayHost\Patterning.GatewayHost.csproj", "{A71F5455-111C-4594-806F-E7FA61C60801}"
+EndProject
+Global
+EndGlobal
