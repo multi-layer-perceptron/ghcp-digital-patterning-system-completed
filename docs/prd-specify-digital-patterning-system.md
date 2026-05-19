@@ -294,6 +294,11 @@ flowchart LR
 
 ## Technical Approach
 
+The C++ pattern processor and C control emulator serve distinct layers of the simulated industrial system. The C++
+module prepares and translates pattern data, including metadata validation, palette extraction, channel mapping, grid
+conversion, and command generation. The C module emulates the lower-level controller boundary that receives protocol
+messages and models lifecycle/state behavior closer to embedded or machine-control logic.
+
 | Component | Responsibility | Location |
 | --- | --- | --- |
 | C# Core | Domain models, services, protocol contracts, report exporters | `workspace/csharp/Patterning.Core/` |
