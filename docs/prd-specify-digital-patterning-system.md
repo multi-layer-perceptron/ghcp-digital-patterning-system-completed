@@ -76,6 +76,7 @@ session begins.
 | GitHub Codespaces | Primary workshop validation path with minimal local setup | Devcontainer-provided .NET 8, CMake, C/C++ compilers, GHDL, SQLite, Docker-in-Docker, Node.js, GitHub CLI, Spec Kit, PostgreSQL client tooling, and optional cloud/MCP CLIs |
 | VS Code Dev Container | Local containerized validation path | VS Code, Dev Containers extension, Docker Desktop or compatible container engine |
 | Manual Linux setup | Direct local validation path | .NET 8 SDK, CMake, C++17 compiler, C11 compiler, Docker, SQLite, and GHDL |
+| Manual Windows validation | Direct local validation path for command-line workflows | .NET 8 SDK, CMake from Kitware, Visual Studio Build Tools or compatible C/C++ compiler, Git for Windows, and optional Docker/GHDL |
 | Windows dashboard | Required path for the WPF operator dashboard GUI | Windows 10 or later, Git for Windows, .NET 8 SDK, optional Visual Studio 2022 or VS Code with C# Dev Kit |
 | Local setup preflight | Required Copilot-assisted check before local execution paths | Run `/01.00.install-required-tools-sdks-and-libraries` in VS Code to scan setup docs, manifests, and devcontainer alignment |
 

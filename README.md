@@ -35,6 +35,7 @@ and PLC-style artifacts.
 | --- | --- |
 | Codespaces / Dev Container | No local build tools required beyond a browser or VS Code. The container installs .NET 8, CMake, C/C++ compilers, GHDL, SQLite, Docker-in-Docker, Node.js, GitHub CLI, Spec Kit, PostgreSQL client tooling, and optional cloud/MCP CLIs. |
 | Local Linux validation | .NET 8 SDK, CMake, a C++17 compiler, a C11 compiler, Docker, SQLite, and GHDL. |
+| Local Windows C/C++ validation | CMake from Kitware and a C/C++ compiler toolchain such as Visual Studio Build Tools. Install CMake with `winget install Kitware.CMake`, open a new terminal, then verify `cmake --version` and `ctest --version`. |
 | Windows dashboard | Windows 10 or later, .NET 8 SDK, Git for Windows, and optionally Visual Studio 2022 or VS Code with C# Dev Kit. |
 | SQL validation | Docker-capable host. The validation path uses a disposable SQLite container while preserving the SQL Server-compatible contract. |
 | Copilot / Spec Kit workshop flows | GitHub CLI, Spec Kit CLI, and a Copilot-enabled GitHub account. |
@@ -66,7 +67,8 @@ your administrator before the workshop. This repository is licensed under [MIT](
 | [Codespaces](#option-a---github-codespaces) | 5-10 min | No local install, easiest validation route | Start here |
 | [VS Code Dev Container](#option-b---vs-code-dev-container) | ~15 min | Local VS Code users with Docker Desktop or another container engine | Supported |
 | [Manual Linux Setup](#option-c---manual-linux-setup) | ~20 min | Users who prefer direct tool installation | Advanced |
-| [Windows Dashboard](#option-d---windows-dashboard) | ~10 min after clone | Running the WPF operator UI | Required for GUI |
+| [Manual Windows Validation](#option-d---manual-windows-validation) | ~20 min | Windows users running command-line validation locally | Advanced |
+| [Windows Dashboard](#option-e---windows-dashboard) | ~10 min after clone | Running the WPF operator UI | Required for GUI |
 
 ### Option A - GitHub Codespaces
 
@@ -99,7 +101,32 @@ Before starting, install the local tools listed in [Additional Tools By Path](#a
 3. Open a shell at the repository root.
 4. Run the commands in [Validate The Stack](#validate-the-stack).
 
-### Option D - Windows Dashboard
+### Option D - Manual Windows Validation
+
+Use this path when you want to run the command-line C#, C++, C, SQL, gateway, or FPGA validation from Windows without a
+Dev Container. For the WPF dashboard GUI, continue with [Windows Dashboard](#option-e---windows-dashboard).
+
+1. Install Git for Windows and the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
+2. Install CMake from the official Kitware package source:
+
+    ```powershell
+    winget install Kitware.CMake
+    ```
+
+3. Install a C/C++ compiler toolchain, such as Visual Studio Build Tools with the Desktop development with C++ workload.
+4. Open a new PowerShell terminal so PATH changes are loaded, then verify:
+
+    ```powershell
+    cmake --version
+    ctest --version
+    dotnet --info
+    ```
+
+5. Clone or fork the repository using [Fork And Clone](#fork-and-clone).
+6. Open the repository in VS Code and run `/01.00.install-required-tools-sdks-and-libraries` in Copilot Chat.
+7. Run the supported commands in [Validate The Stack](#validate-the-stack).
+
+### Option E - Windows Dashboard
 
 Use this path when you want to run the WPF operator dashboard. The dashboard is a Windows desktop app, so use a local
 Windows clone instead of trying to launch the UI from Codespaces.
