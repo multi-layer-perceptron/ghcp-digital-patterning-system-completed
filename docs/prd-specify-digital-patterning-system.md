@@ -1,431 +1,348 @@
-# Product Requirements Document: Digital Patterning System
+# Product Requirements Document: Digital Patterning System Simulator
 
 ## Document Control
 
 - File name: `docs/prd-specify-digital-patterning-system.md`
-- Owner: Floorcovering Development team lead
-- Stakeholders: Development Software Engineers, Design team, Manufacturing Operations, IT/DevOps
+- Owner: Workshop engineering lead
+- Stakeholders: Development Software Engineers, controls engineers, design reviewers, workshop facilitators
 - Status: Approved
 - Created: 2026-05-14
-- Last updated: 2026-05-14
-- Target release or lab milestone: Workshop Labs 10–14 (FPGA, PLC, C#, SQL, Azure IoT Edge)
-
----
+- Last updated: 2026-05-19
+- Target release or lab milestone: Spec Kit implementation baseline
 
 ## Summary
 
-The **Digital Patterning System** is a realistic industrial software reference platform that controls and monitors
-digital textile printing machines used in floorcovering manufacturing. The system spans a real-time PLC control layer,
-an FPGA-based signal-processing module, a C# / .NET WPF operator dashboard, a TypeScript / React web-based design
-portal, and a SQL Server-backed event store — all connected through a TCP/IP fabric and optionally extended to Azure
-IoT Edge for remote telemetry and cloud-connected monitoring.
+The Digital Patterning System Simulator is a confidentiality-safe workshop reference implementation for a representative
+industrial patterning workflow. It models how a design concept moves from image upload or sample selection through
+metadata extraction, palette analysis, manufacturing-channel mapping, production-grid conversion, simulated machine
+lifecycle control, and report export.
 
-This PRD defines the requirements for the workshop simulation of that system, which serves as hands-on material for a
-GitHub Copilot _Agentic DevOps_ deep-dive. The simulation runs locally or in GitHub Codespaces and demonstrates how
-Copilot accelerates engineering workflows across C#, FPGA, PLC, SQL, and TypeScript layers.
-
----
+The simulator is implemented across the requested industrial stack: C#/.NET 8, C++17, C11, SQL, TCP/IP, Windows, Linux,
+FPGA VHDL, and PLC Structured Text. The Linux Codespaces/dev-container environment supports build, test, validation,
+and service-stub workflows. The WPF operator dashboard is a Windows desktop app and must be launched on Windows.
 
 ## Problem Statement
 
-Floorcovering development engineers in industrial manufacturing environments routinely context-switch across six or more
-programming languages and hardware-interface layers in a single sprint. Onboarding new engineers, maintaining
-documentation, and catching cross-layer defects (e.g., a PLC timing constant that disagrees with an FPGA register
-offset) are slow and error-prone without AI assistance.
-
-GitHub Copilot's agentic capabilities — prompt files, path-scoped instructions, skills, and agent mode — can materially
-reduce this friction. This workshop demonstrates those capabilities using a realistic digital patterning scenario:
-_sprint ticket #142: Add dye-head misfire detection to the pattern renderer_.
-
----
+Industrial patterning software often spans dashboard code, processing logic, machine protocol boundaries, persistence,
+controls, and signal-timing artifacts. Engineers need a compact but realistic codebase where GitHub Copilot and Spec Kit
+can demonstrate cross-language planning, implementation, validation, and review without exposing sensitive operational
+details or requiring physical equipment.
 
 ## Goals
 
-- Demonstrate GitHub Copilot Agentic DevOps workflows across the full digital patterning technology stack.
-- Give participants hands-on experience with Copilot prompt files, instructions, skills, and agent mode on real
-  industrial-software patterns (FPGA signal maps, PLC routines, C# services, T-SQL migrations).
-- Produce a reusable reference simulation that can be extended with real C# / .NET WPF and FPGA components without
-  replacing the Python/TypeScript simulation core.
-- Validate that Copilot accelerates cross-language context switching for small-team industrial-software engineers.
-
----
+- Provide a runnable proof-of-concept simulator for digital patterning workflows.
+- Demonstrate Spec Kit-driven implementation across C#, C++, C, SQL, TCP/IP, PLC, and FPGA artifacts.
+- Keep the codebase usable in Linux Codespaces for validation and in Windows for the WPF dashboard.
+- Use generic sample data and terminology throughout documentation, code, and reports.
+- Preserve clear, focused module boundaries suitable for Copilot-assisted workshop exercises.
 
 ## Non-Goals
 
-- Shipping production-quality FPGA bitstreams or PLC programs (simulation stubs only for the workshop).
-- Full Azure IoT Edge deployment in every lab (covered in Lab 14 as an optional advanced track).
-- Authentication, authorization, or multi-tenant design.
-- Machine learning model training (ONNX inference stubs are referenced but not trained in the workshop).
+- Production machine control or connection to physical PLC/FPGA hardware.
+- Production-ready image processing, color science, or optimization algorithms.
+- Authentication, authorization, tenancy, or external identity integration.
+- Cloud deployment as a requirement for the baseline simulator.
+- Running the WPF dashboard GUI inside Linux Codespaces.
 
----
-
-## Users and Personas
+## Users And Personas
 
 | Persona | Needs | Success Looks Like |
 | --- | --- | --- |
-| Development Software Engineer | Explore cross-layer features fast with Copilot | Sprint ticket resolved in <1 day with Copilot assistance |
-| Workshop Participant | Learn Copilot Agentic DevOps hands-on | Completes Lab 10–14 without facilitator intervention |
-| Workshop Facilitator | Demo and reset the system reliably | One-command reset; all labs reproducible in Codespaces |
-| Design Team | Visualize pattern output in real time | Design portal shows live patterning with accurate color rendering |
-| Manufacturing Operator | Monitor machine health from WPF dashboard | Dashboard shows dye-head status, misfire alerts, and pattern progress |
+| Development Software Engineer | Validate a multi-language industrial workflow locally | Builds and tests the complete stack from the quickstart |
+| Workshop Participant | Learn Copilot and Spec Kit on realistic artifacts | Completes implementation and validation tasks without physical equipment |
+| Workshop Facilitator | Demo the simulator repeatably | Runs validation commands and explains Windows vs Linux run paths |
+| Design Reviewer | Inspect concept output summaries | Reviews palette, mapping, diagnostics, grid, and report outputs |
+| Controls Engineer | Understand lifecycle and timing boundaries | Reviews PLC, C emulator, TCP/IP, and FPGA stubs together |
 
----
+## Getting Started Tutorial
 
-## Use Cases
+### Tutorial 1: Validate The Stack In Codespaces
 
-### Use Case 1: Dye-Head Misfire Detection (Sprint Ticket #142)
+1. Open the repository in Codespaces or the VS Code dev container.
+2. Run the C# tests:
 
-- **Actor:** Development Software Engineer
-- **Trigger:** PLC reports a zero-voltage pulse on dye-head channel 7 during a pattern job
-- **Preconditions:** Pattern job is running; FPGA signal monitor is active; SQL event store is recording
-- **Main flow:**
-  1. Engineer opens sprint ticket #142 in GitHub Issues; Copilot Chat summarizes the context.
-  2. Engineer uses Copilot agent mode with `10.03.misfire-detection.prompt.md` to generate `DyeHeadMisfireDetector.cs`.
-  3. Copilot generates xUnit tests and a T-SQL migration for the `dye_head_events` table.
-  4. Engineer runs the PLC simulation harness; validates the signal round-trip against FPGA timing constants.
-  5. PR is opened; Copilot writes the PR description and flags a timing-constant inconsistency inline.
-  6. Engineer resolves the review comment; CI passes; merge triggers Azure IoT Edge deploy.
-- **Alternate flows:**
-  - FPGA timing constant is out of range → Copilot Fix suggests corrected value with register-map reference.
-  - SQL migration conflicts with existing schema → Copilot generates rollback script.
-- **Outcome:** Misfire detection is live; operator dashboard shows misfire alerts; events are stored in SQL.
+   ```bash
+   dotnet test workspace/csharp/PatterningSimulator.sln --configuration Debug
+   ```
 
-### Use Case 2: Pattern Rendering Visualization
+3. Run C++ validation:
 
-- **Actor:** Design Team member
-- **Trigger:** Design team member uploads a new `.pat` pattern file via the React design portal
-- **Preconditions:** Pattern engine service is running; SQL pattern definitions table is seeded
-- **Main flow:**
-  1. User opens the React design portal and uploads a `.pat` file.
-  2. Pattern engine parses the file and generates a pixel-color map via the FPGA signal map module.
-  3. Dashboard renders the animated pattern with per-dye-head color overlays.
-  4. User adjusts color saturation; change is pushed to the PLC layer and reflected in the dashboard within 200 ms.
-- **Alternate flows:**
-  - Invalid `.pat` file → API returns 422 with validation error; portal displays inline error.
-  - PLC connection timeout → Dashboard shows "Machine Offline" banner; pattern preview still renders from last state.
-- **Outcome:** Design team can preview and adjust patterns without a physical machine.
+   ```bash
+   cmake -S workspace/cpp -B workspace/cpp/build
+   cmake --build workspace/cpp/build
+   ctest --test-dir workspace/cpp/build --output-on-failure
+   ```
 
-### Use Case 3: Azure IoT Edge Telemetry
+4. Run C control validation:
 
-- **Actor:** Manufacturing Operations engineer
-- **Trigger:** Pattern engine module is deployed to Azure IoT Edge on the factory floor
-- **Preconditions:** `azd deploy` completed; IoT Hub is configured; SQL event store is reachable
-- **Main flow:**
-  1. Operations engineer runs `azd deploy` with `azd env set AZURE_IOT_HUB_CONNECTION_STRING <value>`.
-  2. Pattern engine module starts on the edge device and begins publishing MQTT telemetry to IoT Hub.
-  3. Telemetry events (pattern start, dye-head status, misfire alerts) are visible in Azure Monitor.
-  4. Operations engineer queries event history from the Azure Portal or via the SQL event store.
-- **Alternate flows:**
-  - Edge device loses connectivity → Module buffers telemetry locally; retries on reconnect.
-- **Outcome:** Factory-floor telemetry is visible in Azure without VPN access to the machine network.
+   ```bash
+   cmake -S workspace/control-c -B workspace/control-c/build
+   cmake --build workspace/control-c/build
+   ctest --test-dir workspace/control-c/build --output-on-failure
+   ```
 
----
+5. Validate SQL in Dockerized SQLite:
+
+   ```bash
+   bash workspace/sql/validate-sqlite-container.sh
+   ```
+
+6. Validate FPGA and gateway stubs:
+
+   ```bash
+   ghdl -a workspace/fpga/signal_map.vhd workspace/fpga/signal_map_tb.vhd
+   ghdl -e signal_map_tb
+   ghdl -r signal_map_tb --stop-time=20ns
+   dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway plc --port 5120 --scenarios workspace/plc/scenarios/basic-run.json
+   dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway fpga --port 5130 --signal-map workspace/fpga/signal_map.vhd
+   ```
+
+### Tutorial 2: Run The Dashboard On Windows
+
+This tutorial covers the Windows-only UI path. It is intentionally separate from Codespaces because WPF requires the
+Windows desktop runtime.
+
+1. Use a Windows machine with Git for Windows and the .NET 8 SDK installed.
+2. Open PowerShell and clone the merged repository locally:
+
+   ```powershell
+   git clone https://github.com/multi-layer-perceptron/ghcp-digital-patterning-system-completed.git
+   cd ghcp-digital-patterning-system-completed
+   ```
+
+3. Confirm the SDK is available:
+
+   ```powershell
+   dotnet --info
+   ```
+
+4. Restore and build the solution:
+
+   ```powershell
+   dotnet restore workspace/csharp/PatterningSimulator.sln
+   dotnet build workspace/csharp/PatterningSimulator.sln --configuration Debug
+   ```
+
+5. Optionally run the C# tests:
+
+   ```powershell
+   dotnet test workspace/csharp/PatterningSimulator.sln --configuration Debug
+   ```
+
+6. Launch the WPF dashboard:
+
+   ```powershell
+   dotnet run --project workspace/csharp/PatterningOperatorDashboard
+   ```
+
+7. Confirm the WPF shell opens with upload, channel mapping, simulation, and report tabs.
+
+## Control Flow
+
+```mermaid
+flowchart TD
+    User[Operator or workshop participant] --> Dashboard[WPF dashboard shell]
+    Dashboard --> Upload[Upload validation service]
+    Upload --> Analysis[Concept analysis service]
+    Analysis --> Mapping[Channel mapping service]
+    Mapping --> Diagnostics[Diagnostic service]
+    Diagnostics -->|blocking diagnostic| Blocked[Blocked state]
+    Diagnostics -->|clear| Grid[Production grid service]
+    Grid --> Lifecycle[Simulation lifecycle service]
+    Lifecycle --> GatewayHost[C# gateway host]
+    GatewayHost --> Plc[PLC gateway stub]
+    GatewayHost --> Fpga[FPGA timing gateway stub]
+    Plc --> ControlC[C control emulator]
+    Fpga --> Vhdl[VHDL signal map]
+    ControlC --> Status[Lifecycle status]
+    Vhdl --> Timing[Timing status]
+    Status --> Lifecycle
+    Timing --> Lifecycle
+    Lifecycle --> Report[Report export commands]
+```
+
+## Data Flow
+
+```mermaid
+flowchart LR
+    Design[Generic design sample or PNG/JPEG] --> Concept[DesignConcept]
+    Concept --> Metadata[ImageMetadata]
+    Concept --> Palette[ColorPalette]
+    Palette --> ChannelDefaults[Default manufacturing channels]
+    ChannelDefaults --> Mapping[ChannelMapping results]
+    Palette --> Mapping
+    Mapping --> Diagnostics[ManufacturabilityDiagnostic list]
+    Mapping --> Grid[ProductionGridModel]
+    Grid --> Commands[Machine command stream]
+    Diagnostics --> Run[SimulationRun]
+    Commands --> Run
+    Concept --> Sql[(SQL Server contract)]
+    Mapping --> Sql
+    Grid --> Sql
+    Run --> Sql
+    Sql --> SQLite[(SQLite container validation schema)]
+    Concept --> Report[ConceptReport]
+    Metadata --> Report
+    Palette --> Report
+    Mapping --> Report
+    Grid --> Report
+    Diagnostics --> Report
+    Run --> Report
+    Report --> Json[JSON report]
+    Report --> Html[Printable HTML report]
+```
 
 ## Functional Requirements
 
-| ID | Requirement | Priority | Notes |
+| ID | Requirement | Priority | Status |
 | --- | --- | --- | --- |
-| FR-001 | The system shall simulate a digital pattern engine with configurable dye-head count (default: 16) and pattern width (default: 1024 px) | Must | Simulation stub; FPGA module is a future extension |
-| FR-002 | The system shall expose a REST API for pattern job submission, dye-head status, and misfire events | Must | FastAPI + Pydantic validation |
-| FR-003 | The system shall stream live pattern state to the dashboard over WebSocket | Must | Same pattern as elevator dispatch workshop |
-| FR-004 | The system shall write pattern job start/stop and dye-head misfire events to SQL when `DATABASE_URL` is configured | Must | Optional persistence; in-memory default |
-| FR-005 | The system shall provide a C# `PatternRenderer` class with a `RenderFrame(PatternJob job)` method | Must | C# stub generated by Copilot in Lab 12 |
-| FR-006 | The system shall provide a C# `DyeHeadMisfireDetector` class that raises `MisfireDetectedEvent` | Must | Generated by Copilot in Lab 10.03 |
-| FR-007 | The system shall include a PLC simulation harness that exercises the dye-head control routine | Should | Structured Text stub; Lab 11 |
-| FR-008 | The system shall include an FPGA signal-map stub that maps pattern bytes to dye-head pulse widths | Should | VHDL stub; Lab 10 |
-| FR-009 | The dashboard shall display per-dye-head status (active / idle / misfired) with animated color overlays | Should | React design portal; Lab 12 |
-| FR-010 | The system shall support deployment to Azure Container Apps and Azure IoT Edge via `azd` | Could | Lab 14 advanced track |
-| FR-011 | The system shall include a T-SQL migration for `pattern_jobs`, `dye_head_events`, and `misfire_alerts` | Should | Generated by Copilot in Lab 10.04 |
-| FR-012 | The system shall include xUnit tests for `PatternRenderer` and `DyeHeadMisfireDetector` | Must | Coverage required for merge |
-
----
+| FR-001 | The system shall validate PNG/JPEG design inputs up to 10 MB and 4096 x 4096 pixels. | Must | Implemented |
+| FR-002 | The system shall include a generic sample design and metadata. | Must | Implemented |
+| FR-003 | The system shall extract image metadata and representative palette values. | Must | Implemented |
+| FR-004 | The system shall provide eight editable generic manufacturing channels. | Must | Implemented |
+| FR-005 | The system shall map palette colors as exact, approximate, or unresolved. | Must | Implemented |
+| FR-006 | The system shall convert mapped designs to 64, 128, or 256 grids. | Must | Implemented |
+| FR-007 | The system shall generate pass-by-pass machine command records. | Should | Implemented |
+| FR-008 | The system shall block simulation when blocking diagnostics are present. | Must | Implemented |
+| FR-009 | The system shall simulate start, pause, resume, and reset lifecycle states. | Must | Implemented |
+| FR-010 | The system shall include TCP/IP JSON Lines protocol contracts and helpers. | Must | Implemented |
+| FR-011 | The system shall include C# PLC and FPGA gateway proof stubs. | Should | Implemented |
+| FR-012 | The system shall include C control emulator lifecycle and protocol helpers. | Should | Implemented |
+| FR-013 | The system shall include VHDL signal-map and testbench stubs. | Should | Implemented |
+| FR-014 | The system shall export concept reports as JSON and printable HTML. | Must | Implemented |
+| FR-015 | The system shall validate SQL schema locally through a Dockerized SQLite option. | Must | Implemented |
 
 ## Non-Functional Requirements
 
-| ID | Category | Requirement | Target |
-| --- | --- | --- | --- |
-| NFR-001 | Performance | Dashboard WebSocket update latency | ≤ 200 ms end-to-end |
-| NFR-002 | Performance | Pattern frame render time (C# stub) | ≤ 50 ms per frame at 1024 px width |
-| NFR-003 | Reliability | Simulation uptime in Codespaces without restart | ≥ 4 hours |
-| NFR-004 | Reliability | PLC simulation harness must complete signal round-trip without timeout | 100% of test cases |
-| NFR-005 | Security | No secrets committed to repository | Enforced by `.gitignore` and secret scanning |
-| NFR-006 | Security | SQL parameterized queries only; no string concatenation | Enforced by code review and Copilot instructions |
-| NFR-007 | Accessibility | Dashboard readable at 1280×720 and above; keyboard navigable | WCAG 2.1 AA |
-| NFR-008 | Maintainability | Each module < 300 lines; single-responsibility | Enforced by Copilot instructions |
-| NFR-009 | Portability | Simulation layer runs on Windows, macOS, and Linux | Tested in Codespaces (Ubuntu) |
-
----
+| ID | Category | Requirement | Target | Status |
+| --- | --- | --- | --- | --- |
+| NFR-001 | Portability | Linux Codespaces shall support non-GUI validation. | C#, C++, C, SQL, FPGA, gateway checks pass | Implemented |
+| NFR-002 | Platform | WPF dashboard shall target Windows. | Buildable from Linux; runnable on Windows | Implemented |
+| NFR-003 | Maintainability | Components shall keep simple workshop-friendly boundaries. | Separate C#, C++, C, SQL, PLC, FPGA folders | Implemented |
+| NFR-004 | Validation | Task list shall include passing validation coverage. | All Spec Kit tasks checked complete | Implemented |
+| NFR-005 | Confidentiality | Generated text and sample data shall avoid restricted identifiers. | Scan returns no blocked terms | Implemented |
+| NFR-006 | Reproducibility | Devcontainer shall include required validation tooling. | .NET 8, CMake, GHDL, SQLite, Docker | Implemented |
 
 ## User Experience Requirements
 
-- **Primary screens:** Live pattern dashboard (TypeScript / React), operator dashboard (C# WPF stub), REST API docs
-  (`/docs`)
-- **Required states:** Loading, pattern running, pattern paused, misfire alert, machine offline, reset confirmation
-- **Content requirements:** Dye-head status grid, pattern progress bar, misfire alert banner, event log table,
-  pattern preview canvas
-- **Accessibility:** Keyboard focus on all interactive controls; ARIA labels on dye-head status indicators; high-contrast
-  misfire alert color
-- **Responsive behavior:** Dashboard usable on 1280×720 operator monitor; design portal optimized for 1920×1080
-
----
+- Primary Windows surface: WPF operator dashboard shell with upload, channel mapping, simulation, and report tabs.
+- Primary Linux/Codespaces surface: command-line validation, gateway stubs, SQLite container validation, and test output.
+- Required states: uploaded, analyzed, mapped, converted, running, paused, completed, blocked, reset.
+- Report outputs: structured JSON and printable HTML.
+- Accessibility: WPF controls should remain keyboard reachable as the dashboard matures.
 
 ## Data Requirements
 
-- **Entities:** `PatternJob`, `DyeHeadStatus`, `MisfireEvent`, `PatternDefinition`, `SimulationRun`
-- **Required fields:**
-  - `PatternJob`: `id UUID`, `pattern_name VARCHAR(255)`, `started_at TIMESTAMPTZ`, `completed_at TIMESTAMPTZ`,
-    `status VARCHAR(50)`
-  - `DyeHeadStatus`: `id UUID`, `job_id UUID FK`, `head_index INT`, `status VARCHAR(50)`, `recorded_at TIMESTAMPTZ`
-  - `MisfireEvent`: `id UUID`, `job_id UUID FK`, `head_index INT`, `channel INT`, `detected_at TIMESTAMPTZ`,
-    `resolved_at TIMESTAMPTZ`
-- **Data lifecycle:** Created on job start; updated on misfire; closed on job complete; purged on simulation restart
-- **Validation rules:** `head_index` must be 0–15; `channel` must be 0–31; `status` must be one of
-  `queued | running | paused | completed | failed`
-- **Seed data:** 3 sample pattern definitions included in `workspace/scripts/seed_patterns.sql`
-- **Privacy:** No PII; all data is operational machine telemetry
+- Entities: `DesignConcept`, `ImageMetadata`, `ColorPalette`, `PaletteColor`, `ManufacturingChannel`,
+  `ChannelMapping`, `ProductionGridModel`, `ManufacturabilityDiagnostic`, `SimulationRun`, `ConceptReport`.
+- Required sample data: generic floorcovering sample metadata and a tiny PNG fixture.
+- Persistence contract: SQL Server-compatible schema in the feature contract.
+- Local validation schema: SQLite-compatible schema for disposable Docker validation.
+- Data sensitivity: synthetic workshop data only.
 
----
+## API And Integration Requirements
 
-## API and Integration Requirements
-
-- **REST endpoints:**
-  - `GET /api/state` — current simulation snapshot
-  - `POST /api/pattern/start` — start a new pattern job `{ "pattern_name": "str", "dye_head_count": int }`
-  - `POST /api/pattern/pause` — pause the running job
-  - `POST /api/pattern/restart` — clear state and start fresh
-  - `GET /api/misfire/events` — list all misfire events for the current run
-  - `POST /api/misfire/resolve/{event_id}` — mark misfire as resolved
-- **WebSocket:** `ws://host/ws` — pushes `SimulationStateSnapshot` JSON every 500 ms
-- **Internal module boundaries:**
-  - `simulation/` owns pattern state; `api/` owns HTTP/WS lifecycle; `ui/` owns rendering
-  - C# `PatternRenderer` calls FPGA signal map through a `ISignalMapAdapter` interface
-  - PLC routines communicate with C# service via TCP/IP socket (simulated with a loopback stub)
-- **External services:** Azure IoT Hub (optional); SQL Server or PostgreSQL (optional); Azure Container Apps
-- **Configuration:** `DATABASE_URL`, `AZURE_IOT_HUB_CONNECTION_STRING`, `DYE_HEAD_COUNT`, `PATTERN_WIDTH_PX`
-- **Failure handling:** Missing `DATABASE_URL` → in-memory mode; IoT Hub unreachable → local buffer with retry
-
----
+- TCP/IP protocol: JSON Lines envelopes with schema version `0.1`.
+- C++ pattern processor boundary: concept analysis, grid conversion, command generation.
+- C control boundary: lifecycle state and protocol helpers.
+- C# gateway host: CLI-driven PLC and FPGA timing gateway stubs.
+- SQL validation: `bash workspace/sql/validate-sqlite-container.sh`.
+- External services: none required for baseline local validation.
 
 ## Technical Approach
 
-The simulation core is a Python FastAPI service (mirroring the elevator dispatch workshop) that stands in for the C#
-Pattern Engine service during Copilot Labs 01–09. From Lab 10 onward, participants generate C# stubs alongside the
-running simulation to experience multi-language Copilot workflows.
-
-### Proposed Components
-
-| Component | Responsibility | Files or Location |
+| Component | Responsibility | Location |
 | --- | --- | --- |
-| Pattern Engine (Python sim) | Simulation tick, dye-head state, WebSocket push | `workspace/simulation/` |
-| FastAPI Server | REST API, WebSocket lifecycle, request validation | `workspace/api/server.py` |
-| SQL Persistence | Optional event writes to `pattern_jobs` / `dye_head_events` | `workspace/api/database.py` |
-| Live Dashboard | Real-time pattern visualization | `workspace/ui/` |
-| C# Pattern Renderer stub | `PatternRenderer.cs`, `DyeHeadMisfireDetector.cs`, xUnit tests | `workspace/csharp/` (Lab 12) |
-| FPGA Signal Map stub | VHDL signal-to-pixel mapping | `workspace/fpga/` (Lab 10) |
-| PLC Control stub | Structured Text dye-head control routine | `workspace/plc/` (Lab 11) |
-| T-SQL Schema | `pattern_jobs`, `dye_head_events`, `misfire_alerts` tables | `workspace/sql/migrations/` |
-| Azure IoT Edge module | Pattern engine container on edge device | `workspace/edge/` (Lab 14) |
-
-### Data Model or Schema
-
-```sql
--- pattern_jobs
-CREATE TABLE pattern_jobs (
-    id              UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    pattern_name    NVARCHAR(255) NOT NULL,
-    dye_head_count  INT NOT NULL DEFAULT 16,
-    pattern_width   INT NOT NULL DEFAULT 1024,
-    status          NVARCHAR(50) NOT NULL DEFAULT 'queued',
-    started_at      DATETIMEOFFSET,
-    completed_at    DATETIMEOFFSET,
-    created_at      DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET()
-);
-
--- dye_head_events
-CREATE TABLE dye_head_events (
-    id              UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    job_id          UNIQUEIDENTIFIER NOT NULL REFERENCES pattern_jobs(id),
-    head_index      INT NOT NULL,
-    event_type      NVARCHAR(50) NOT NULL, -- 'activated' | 'idle' | 'misfired'
-    recorded_at     DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET()
-);
-
--- misfire_alerts
-CREATE TABLE misfire_alerts (
-    id              UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    job_id          UNIQUEIDENTIFIER NOT NULL REFERENCES pattern_jobs(id),
-    head_index      INT NOT NULL,
-    channel         INT NOT NULL,
-    detected_at     DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(),
-    resolved_at     DATETIMEOFFSET,
-    resolved_by     NVARCHAR(255)
-);
-```
-
-### Key Flows
-
-```text
-Pattern Job Lifecycle:
-  POST /api/pattern/start
-    → PatternEngine.start_job()
-      → FPGA signal map: pattern bytes → pulse widths
-        → PLC layer: pulse widths → dye-head activation signals
-          → DyeHeadMisfireDetector: monitor for zero-voltage pulses
-            → MisfireEvent raised → SQL insert → WebSocket push → dashboard alert
-
-Misfire Detection Flow (C# / Lab 12):
-  PLC TCP socket → C# SignalReceiver
-    → DyeHeadMisfireDetector.Inspect(signal)
-      → if (signal.Voltage < THRESHOLD) → raise MisfireDetectedEvent
-        → PatternRenderer.MarkHeadMisfired(headIndex)
-          → SQL INSERT dye_head_events + misfire_alerts
-            → SignalR push → dashboard banner
-```
-
----
+| C# Core | Domain models, services, protocol contracts, report exporters | `workspace/csharp/Patterning.Core/` |
+| C# Infrastructure | SQL repositories, TCP client, gateway stubs | `workspace/csharp/Patterning.Infrastructure/` |
+| C# Dashboard | Windows WPF operator dashboard shell | `workspace/csharp/PatterningOperatorDashboard/` |
+| C# Gateway Host | CLI host for PLC/FPGA proof stubs | `workspace/csharp/Patterning.GatewayHost/` |
+| C# Tests | xUnit workflow, report, and timing tests | `workspace/csharp/Patterning.Tests/` |
+| C++ Processor | Image, palette, channel mapping, grid, command logic | `workspace/cpp/` |
+| C Emulator | Control lifecycle and protocol helpers | `workspace/control-c/` |
+| SQL | Contract schema and SQLite validation schema | `workspace/sql/` |
+| PLC | Structured Text lifecycle stub | `workspace/plc/` |
+| FPGA | VHDL signal-map stub and testbench | `workspace/fpga/` |
 
 ## Acceptance Criteria
 
-- [ ] AC-001: Given a running pattern job, when dye-head channel 7 reports zero voltage, then a `MisfireDetectedEvent`
-  is raised within 50 ms and the dashboard shows a misfire alert banner.
-- [ ] AC-002: Given a valid `.pat` file upload, when the pattern engine parses it, then the live dashboard renders the
-  animated pattern within 200 ms.
-- [ ] AC-003: Given `DATABASE_URL` is set, when a pattern job starts, then a row is inserted into `pattern_jobs` and
-  dye-head events are written to `dye_head_events`.
-- [ ] AC-004: Given `DATABASE_URL` is not set, when the simulation runs, then no database calls are made and the
-  simulation operates correctly in memory.
-- [ ] AC-005: Given the Copilot prompt `10.03.misfire-detection.prompt.md`, when the engineer runs it in agent mode,
-  then `DyeHeadMisfireDetector.cs` and its xUnit tests are generated in `workspace/csharp/`.
-- [ ] AC-006: Given a completed C# `PatternRenderer`, when `dotnet test` is run, then all xUnit tests pass.
-- [ ] AC-007: Given `azd deploy` is run with a valid Azure environment, when the deployment completes, then
-  `GET /api/state` returns 200 from the Container Apps endpoint.
-- [ ] AC-008: Given the FPGA signal-map stub in Lab 10, when the simulation tick runs, then signal-to-pixel mapping
-  produces a valid color array with no index-out-of-bounds errors.
+- [x] AC-001: Given a supported sample image, when validation runs, then a concept is accepted for analysis.
+- [x] AC-002: Given a palette and default channels, when mapping runs, then each palette color has a mapping status.
+- [x] AC-003: Given unresolved mappings, when diagnostics run, then blocking diagnostics prevent simulation start.
+- [x] AC-004: Given a mapped concept, when grid conversion runs, then 64, 128, and 256 grid paths are supported.
+- [x] AC-005: Given lifecycle commands, when the C# and C stubs run, then start, pause, resume, and reset are represented.
+- [x] AC-006: Given the SQLite validation script, when Docker is available, then the expected schema tables are created.
+- [x] AC-007: Given the VHDL files, when GHDL runs, then the testbench completes.
+- [x] AC-008: Given report exporters, when JSON and HTML exports run, then output is generated from the report model.
+- [x] AC-009: Given the Linux devcontainer, when validation commands run, then non-GUI stack checks pass.
+- [x] AC-010: Given Windows with .NET 8, when the dashboard project runs, then the WPF shell can launch.
 
----
+## Validation Summary
 
-## Metrics and Success Criteria
+The merged baseline was validated with:
 
-| Metric | Baseline | Target | Measurement Method |
-| --- | --- | --- | --- |
-| Copilot prompt completion rate | N/A | 100% of Labs 10–14 generate runnable code | Manual lab completion tracking |
-| Test pass rate (C# xUnit) | N/A | 100% pass on first Copilot-generated run | `dotnet test` output |
-| Dashboard WebSocket latency | N/A | ≤ 200 ms | Browser DevTools network waterfall |
-| Time to complete sprint ticket #142 simulation | N/A | ≤ 90 min with Copilot | Workshop stopwatch |
-| Misfire detection false-positive rate | N/A | 0% with simulation harness | PLC harness test log |
+- `dotnet test workspace/csharp/PatterningSimulator.sln --configuration Debug`
+- `cmake -S workspace/cpp -B workspace/cpp/build && cmake --build workspace/cpp/build && ctest --test-dir workspace/cpp/build --output-on-failure`
+- `cmake -S workspace/control-c -B workspace/control-c/build && cmake --build workspace/control-c/build && ctest --test-dir workspace/control-c/build --output-on-failure`
+- `bash workspace/sql/validate-sqlite-container.sh`
+- `ghdl -a workspace/fpga/signal_map.vhd workspace/fpga/signal_map_tb.vhd && ghdl -e signal_map_tb && ghdl -r signal_map_tb --stop-time=20ns`
+- `dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway plc --port 5120 --scenarios workspace/plc/scenarios/basic-run.json`
+- `dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway fpga --port 5130 --signal-map workspace/fpga/signal_map.vhd`
 
----
+## Rollout And Operations
 
-## Testing Strategy
+- Use Codespaces/devcontainer for validation and workshop implementation tasks.
+- Use Windows with .NET 8 for the WPF dashboard GUI.
+- Use Docker-backed SQLite validation for repeatable local schema checks.
+- No cloud resources are required for the baseline simulator.
+- Generated build artifacts are ignored by `.gitignore`, including `node_modules/`, build folders, and GHDL work files.
 
-- **Unit tests:** xUnit tests for `PatternRenderer`, `DyeHeadMisfireDetector`, FPGA signal-map adapter; `unittest`
-  tests for Python simulation tick, dispatcher, and API validation
-- **Integration tests:** PLC simulation harness signal round-trip; SQL event write / read cycle; WebSocket push-to-UI
-  latency
-- **Manual validation:** Run simulation in Codespaces; open dashboard; trigger misfire via `POST /api/test/misfire`;
-  verify banner and SQL event
-- **Test data:** 3 seed pattern definitions; 1 misfire scenario fixture
-- **Regression risks:** FPGA timing constant changes that invalidate pulse-width mapping; SQL schema drift between
-  Python model and C# Entity Framework model
+## Security, Privacy, And Compliance
 
----
-
-## Rollout and Operations
-
-- **Local / Codespaces:** `docker compose up` starts PostgreSQL sidecar; `uvicorn` starts pattern engine
-- **Azure Container Apps:** `azd deploy` from repository root; see `azure.yaml` for service definitions
-- **Azure IoT Edge:** `azd deploy --service edge-module` (Lab 14 advanced track)
-- **Migration plan:** None for initial launch; T-SQL migrations are additive
-- **Backward compatibility:** Python simulation API shape is stable; C# stubs are additive to the existing workspace
-- **Observability:** Structured JSON logs from FastAPI; Azure Monitor for Container Apps; IoT Hub telemetry for edge
-- **Runbook:** If dashboard shows "No signal", check that `uvicorn` is running and port 7000 is forwarded in Codespaces
-
----
-
-## Security, Privacy, and Compliance
-
-- **Authentication:** None required for workshop; production would use Azure Managed Identity for IoT Hub and SQL
-- **Secrets:** `DATABASE_URL` and `AZURE_IOT_HUB_CONNECTION_STRING` via environment variables only; never committed
-- **Data protection:** All data is synthetic machine telemetry; no PII; no GDPR scope
-- **Abuse / misuse:** Workshop environment only; no public-facing endpoints in production deployment
-
----
+- No authentication is required for the baseline workshop simulator.
+- No secrets are required for local validation.
+- Sample data is synthetic and generic.
+- Reports and documentation use confidentiality-safe terminology.
 
 ## Dependencies
 
-- **Internal:** `workspace/simulation/`, `workspace/api/`, `workspace/ui/`, `workspace/tests/`
-- **External:** Python 3.10+, FastAPI, Pydantic, SQLAlchemy, asyncpg (PostgreSQL); Node.js, TypeScript, React;
-  .NET 8 SDK (C# labs); CODESYS or TwinCAT (PLC harness, local only); ModelSim or Vivado (FPGA, local only)
-- **Azure:** Azure Container Apps, Azure Container Registry, Azure Database for PostgreSQL Flexible Server,
-  Azure IoT Hub, Azure IoT Edge runtime
-- **Team:** Workshop facilitator for lab validation; Design team for `.pat` file format specification
+- .NET 8 SDK
+- CMake / CTest
+- GCC and G++
+- Docker
+- SQLite CLI or SQLite container image
+- GHDL
+- Optional Windows desktop environment for the WPF dashboard
 
----
-
-## Risks and Mitigations
+## Risks And Mitigations
 
 | Risk | Impact | Likelihood | Mitigation |
 | --- | --- | --- | --- |
-| FPGA toolchain not available in Codespaces | High | High | Use simulation stubs; FPGA labs are optional or local-only |
-| PLC runtime not available in devcontainer | High | High | Use TCP loopback stub; real PLC is Lab 11 advanced track |
-| C# .NET SDK not pre-installed in devcontainer | Medium | Medium | Add `.NET 8 SDK` feature to `devcontainer.json` |
-| SQL Server not available in Codespaces | Medium | Low | Default to PostgreSQL; Entity Framework supports both |
-| Copilot generates non-compiling C# | Medium | Medium | Provide `csharp-wpf.instructions.md` with type-hint conventions |
-| Azure IoT Hub cost overrun in workshop | Low | Low | Use free tier; enforce teardown after Lab 14 |
-
----
-
-## Open Questions
-
-- [ ] Should the FPGA simulation use a VHDL stub or a C++ behavioral model? (Owner: engineering lead)
-- [ ] Should the PLC harness use CODESYS or TwinCAT? (Owner: controls engineering lead)
-- [ ] Should the design portal use React or a framework-free TypeScript approach? (Owner: UI lead)
-- [ ] Is Azure SQL (SQL Server) or Azure Database for PostgreSQL preferred for the workshop persistence layer?
-  (Owner: DevOps lead)
-
----
+| Users try to run WPF in Linux Codespaces | Medium | High | README and quickstart state that WPF GUI requires Windows |
+| SQL Server tooling is unavailable in Codespaces | Medium | High | Provide Dockerized SQLite validation path |
+| Hardware toolchains are unavailable | Medium | Medium | Use C, C#, PLC, and VHDL stubs with local validation |
+| Simulator mistaken for production control software | High | Low | Documentation labels it as a proof-of-concept workshop simulator |
 
 ## Decisions
 
 | Date | Decision | Rationale | Owner |
 | --- | --- | --- | --- |
-| 2026-05-14 | Use Python FastAPI for simulation core (Labs 01–09) | Aligns with existing elevator dispatch workshop; no new runtime | Workshop facilitator |
-| 2026-05-14 | Generate C# stubs from Copilot in Labs 10–14 | Demonstrates cross-language Copilot capability without pre-written C# | Engineering lead |
-| 2026-05-14 | Use FPGA VHDL stubs (not behavioral C++) | VHDL is a representative signal-processing language for the workshop scenario | Engineering lead |
-| 2026-05-14 | PostgreSQL for workshop persistence; SQL Server schema for C# labs | PostgreSQL is available in devcontainer; SQL Server schema is more realistic for .NET workshops | DevOps lead |
+| 2026-05-19 | Use C#/.NET 8 WPF for the operator dashboard shell | Matches requested Windows/operator stack | Workshop engineering lead |
+| 2026-05-19 | Use C++17 for image, palette, mapping, grid, and command logic | Keeps processing logic close to industrial implementation patterns | Workshop engineering lead |
+| 2026-05-19 | Use C11 for the control emulator | Represents low-level control boundaries and protocol helpers | Workshop engineering lead |
+| 2026-05-19 | Validate SQL with SQLite in Docker while preserving SQL Server-compatible contract | Keeps Codespaces validation lightweight and repeatable | Workshop engineering lead |
+| 2026-05-19 | Use VHDL and Structured Text stubs for FPGA and PLC artifacts | Demonstrates hardware-adjacent workflows without physical equipment | Workshop engineering lead |
 
----
+## Open Questions
 
-## Implementation Plan
-
-1. Extend `workspace/simulation/` with `PatternEngine`, `DyeHeadManager`, and `MisfireDetector` Python modules.
-2. Add `POST /api/pattern/start`, `POST /api/pattern/pause`, `GET /api/misfire/events` routes to `api/server.py`.
-3. Extend `workspace/api/database.py` with `pattern_jobs`, `dye_head_events`, and `misfire_alerts` write helpers.
-4. Update `workspace/ui/` dashboard to show dye-head status grid and misfire alert banner.
-5. Write Python `unittest` tests for pattern engine, dispatcher, and API validation.
-6. Create `10.00.fpga-signal-map.prompt.md` — Copilot prompt to scaffold VHDL signal-map stub.
-7. Create `10.01.plc-dye-head-control.prompt.md` — Copilot prompt to scaffold PLC Structured Text routine.
-8. Create `10.02.pattern-renderer-csharp.prompt.md` — Copilot prompt to generate `PatternRenderer.cs` and xUnit tests.
-9. Create `10.03.misfire-detection.prompt.md` — Copilot prompt for `DyeHeadMisfireDetector.cs`.
-10. Create `10.04.sql-schema-migration.prompt.md` — Copilot prompt for T-SQL migration.
-11. Create `10.05.azure-iot-edge-deploy.prompt.md` — Copilot prompt for Azure IoT Edge deploy.
-12. Validate all labs end-to-end in Codespaces; record demo walkthrough.
-
----
+- [ ] Should a browser-based dashboard be added so the primary UI can run directly in Codespaces?
+- [ ] Should the SQLite validation schema be generated automatically from the SQL Server-compatible contract?
+- [ ] Should the gateway host evolve into a long-running TCP server for interactive dashboard integration?
 
 ## Appendix
 
-- **Related infographic:** [docs/images/digitial-patterning-infographic.svg](images/digitial-patterning-infographic.svg)
-- **Root README:** [README.md](../README.md)
-- **Elevator dispatch PRD (reference):** [prd-elevator-dispatch.md](prd-elevator-dispatch.md)
-- **Copilot instructions:** [.github/copilot-instructions.md](../.github/copilot-instructions.md)
-- **Workshop prompts:** [.github/prompts/](../.github/prompts/)
-- **Glossary:**
-  - **Digital patterning system** — A representative digital textile patterning machine and software stack
-  - **Dye head** — An individual ink-jet nozzle assembly that applies a single color channel to the textile
-  - **FPGA** — Field-Programmable Gate Array; handles real-time signal processing between the pattern engine and dye heads
-  - **PLC** — Programmable Logic Controller; executes machine control logic (conveyor speed, dye-head timing)
-  - **IEC 61131-3** — International standard for PLC programming languages; Structured Text is used in this project
-  - **OPC-UA** — Open Platform Communications Unified Architecture; used for machine-to-cloud telemetry
-  - **MQTT** — Lightweight messaging protocol used by Azure IoT Edge for telemetry
-  - **ADR** — Architecture Decision Record; used to capture key design choices
+- Related infographic: [images/digitial-patterning-infographic.svg](images/digitial-patterning-infographic.svg)
+- Root README: [../README.md](../README.md)
+- Feature quickstart: [../specs/001-digital-patterning-simulator/quickstart.md](../specs/001-digital-patterning-simulator/quickstart.md)
+- TCP/IP contract: [../specs/001-digital-patterning-simulator/contracts/tcp-command-protocol.md](../specs/001-digital-patterning-simulator/contracts/tcp-command-protocol.md)
+- SQL contract: [../specs/001-digital-patterning-simulator/contracts/sql-schema.sql](../specs/001-digital-patterning-simulator/contracts/sql-schema.sql)

@@ -1,322 +1,338 @@
-# Digital Patterning System
+# Digital Patterning System Simulator
 
-> **GitHub Copilot · Agentic DevOps · Deep Dive Workshop**
-> *A fictitious-but-realistic day-in-the-life scenario for a Development Software Engineer on a digital patterning
-> systems team.*
+> GitHub Copilot workshop reference implementation for an industrial digital patterning simulator.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-green.svg)](https://python.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![.NET 8](https://img.shields.io/badge/.NET-8-purple.svg)](https://dotnet.microsoft.com/)
+[![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://isocpp.org/)
+[![C11](https://img.shields.io/badge/C-11-lightgrey.svg)](https://en.cppreference.com/w/c)
 [![GitHub Copilot](https://img.shields.io/badge/GitHub%20Copilot-Enabled-black.svg)](https://github.com/features/copilot)
-
----
 
 ## Overview
 
-The **Digital Patterning System** is a realistic industrial software reference platform that drives digital textile
-printing machines used in floorcovering manufacturing. Engineers on a digital patterning systems team architect,
-implement, test, and deploy software spanning real-time PLC control, FPGA signal processing, a C# / .NET WPF operator
-dashboard, and a TypeScript / React web-based design portal — all connected through a TCP/IP fabric and backed by SQL
-Server.
+This repository contains a confidentiality-safe, industrial-stack proof of concept for a digital patterning workflow.
+The simulator shows how a design concept can move through image analysis, palette extraction, manufacturing-channel
+mapping, production-grid conversion, machine lifecycle simulation, and report export.
 
-This repository serves as a GitHub Copilot workshop that demonstrates **Agentic DevOps** workflows across the full
-digital patterning stack. Participants follow a realistic _day-in-the-life_ scenario for a Development Software Engineer:
-morning stand-up, feature branch, Copilot-assisted implementation across C# / FPGA / PLC layers, PR review, CI/CD
-pipeline, and Azure IoT Edge deployment — all with GitHub Copilot as an active pair-programmer.
+The implementation is intentionally broad rather than production-deep. It gives workshop participants a realistic
+multi-language codebase for GitHub Copilot and Spec Kit workflows across C#, C++, C, SQL, TCP/IP, Windows, Linux, FPGA,
+and PLC-style artifacts.
 
-### Workshop Infographic
+## Prerequisites
 
-![Digital Patterning System Infographic](docs/images/digitial-patterning-infographic.svg)
+### Must-Have Now
 
----
-
-## Day in the Life: Development Software Engineer
-
-| Time | Activity | Copilot Role |
-| --- | --- | --- |
-| 08:00 | Daily stand-up; pick up sprint ticket #142 — *"Add dye-head misfire detection to pattern renderer"* | Copilot Chat summarizes ticket context |
-| 08:30 | Explore `PatternRenderer.cs` and FPGA signal map | Copilot Explain walks through signal-to-pixel mapping |
-| 09:00 | Generate `DyeHeadMisfireDetector` class with unit tests | Copilot generates C# class, xUnit tests, and SQL migration |
-| 10:30 | Run PLC simulation harness; validate signal round-trip | Copilot suggests edge-case assertions |
-| 11:00 | Open PR; Copilot writes PR description from diff | Copilot PR summarizer, inline review comments |
-| 13:00 | Address review feedback on FPGA timing constants | Copilot Fix applied to flagged lines |
-| 14:00 | CI passes; merge to `main`; Azure IoT Edge deploy starts | GitHub Actions + `azd deploy` |
-| 15:00 | Monitor Grafana dashboard in Codespaces port-forward | Copilot explains anomaly in telemetry log |
-| 16:00 | Write ADR for misfire-detection algorithm choice | Copilot drafts ADR from discussion thread |
-| 16:30 | Demo to design team; update sprint board | Copilot Chat generates demo script |
-
----
-
-## Technology Stack
-
-| Layer | Technologies |
+| Requirement | Details |
 | --- | --- |
-| **Operator Dashboard** | C# · .NET 8 · WPF · XAML |
-| **Web Design Portal** | TypeScript · React 18 · Node.js |
-| **Backend Services** | C# · .NET 8 Web API · SignalR |
-| **Pattern Engine** | C++ · FPGA (VHDL / Verilog) · real-time DSP |
-| **Machine Control** | C · PLC (IEC 61131-3 Structured Text) · TCP/IP |
-| **Data Store** | SQL Server · T-SQL · Entity Framework Core |
-| **DevOps** | GitHub Actions · Azure DevOps · Azure Container Apps |
-| **Edge / IoT** | Azure IoT Edge · MQTT · OPC-UA |
-| **AI / ML** | GitHub Copilot · Azure ML · ONNX inference |
-| **OS / Runtime** | Windows (WPF) · Linux (Edge modules) · RTOS (PLC) |
-| **IDE** | VS Code · Visual Studio 2022 |
+| GitHub account | Required to fork, clone, open Codespaces, and use Copilot-assisted workshop flows. |
+| Git | Install from [git-scm.com](https://git-scm.com/downloads) and configure credentials for your GitHub account. |
+| VS Code | Recommended editor for Codespaces, Dev Containers, C#, C++, C, SQL, VHDL, and PLC artifacts. |
+| GitHub Copilot | Recommended for the workshop exercises; the simulator itself can build and run without Copilot. |
 
----
+### Additional Tools By Path
+
+| Applies To | Requirement |
+| --- | --- |
+| Codespaces / Dev Container | No local build tools required beyond a browser or VS Code. The container installs .NET 8, CMake, GHDL, SQLite, Docker-in-Docker, Node.js, GitHub CLI, and Spec Kit. |
+| Local Linux validation | .NET 8 SDK, CMake, a C++17 compiler, a C11 compiler, Docker, SQLite, and GHDL. |
+| Windows dashboard | Windows 10 or later, .NET 8 SDK, Git for Windows, and optionally Visual Studio 2022 or VS Code with C# Dev Kit. |
+| SQL validation | Docker-capable host. The validation path uses a disposable SQLite container while preserving the SQL Server-compatible contract. |
+| Copilot / Spec Kit workshop flows | GitHub CLI, Spec Kit CLI, and a Copilot-enabled GitHub account. |
+
+### Permissions And Licensing
+
+| Scenario | Required Access |
+| --- | --- |
+| Run validation commands | Read access to this repository and permission to run local or containerized tools. |
+| Use Codespaces | Codespaces enabled for your GitHub account or organization. |
+| Fork for workshop edits | Permission to fork public repositories, or permission to create a copy inside your organization. |
+| Push changes or open PRs | Write access to your fork or target repository. |
+| Use GitHub Copilot | Copilot Individual, Business, Enterprise, or another license assigned by your organization. |
+
+If your organization restricts Codespaces, Copilot, Docker, or GitHub Actions through policy, confirm those features with
+your administrator before the workshop. This repository is licensed under [MIT](LICENSE).
+
+## Choose Your Path
+
+| Path | Time | For | Recommendation |
+| --- | --- | --- | --- |
+| [Codespaces](#option-a--github-codespaces) | 5-10 min | No local install, easiest validation route | Start here |
+| [VS Code Dev Container](#option-b--vs-code-dev-container) | ~15 min | Local VS Code users with Docker Desktop or another container engine | Supported |
+| [Manual Linux Setup](#option-c--manual-linux-setup) | ~20 min | Users who prefer direct tool installation | Advanced |
+| [Windows Dashboard](#option-d--windows-dashboard) | ~10 min after clone | Running the WPF operator UI | Required for GUI |
+
+### Option A - GitHub Codespaces
+
+1. Open the repository in GitHub.
+2. Select **Code** > **Codespaces** > **Create codespace on main**.
+3. Wait for the container to finish building. The first build can take a few minutes.
+4. Open a terminal and continue with [Validate The Stack](#validate-the-stack).
+
+The Codespaces path is the recommended workshop setup for build, test, SQL, gateway, and FPGA validation. It cannot run
+the Windows WPF dashboard.
+
+### Option B - VS Code Dev Container
+
+1. Install [VS Code](https://code.visualstudio.com/), the Dev Containers extension, and Docker Desktop or a compatible
+  container engine.
+2. Clone or fork the repository using [Fork And Clone](#fork-and-clone).
+3. Open the repository folder in VS Code.
+4. When prompted, select **Reopen in Container**. You can also run **Dev Containers: Reopen in Container** from the
+  Command Palette.
+5. Wait for the container to finish building, then continue with [Validate The Stack](#validate-the-stack).
+
+### Option C - Manual Linux Setup
+
+Before starting, install the local tools listed in [Additional Tools By Path](#additional-tools-by-path).
+
+1. Clone or fork the repository using [Fork And Clone](#fork-and-clone).
+2. Open a shell at the repository root.
+3. Run the commands in [Validate The Stack](#validate-the-stack).
+
+### Option D - Windows Dashboard
+
+Use this path when you want to run the WPF operator dashboard. The dashboard is a Windows desktop app, so use a local
+Windows clone instead of trying to launch the UI from Codespaces.
+
+1. Install Git for Windows and the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
+2. Open PowerShell and clone the repository:
+
+    ```powershell
+    git clone https://github.com/multi-layer-perceptron/ghcp-digital-patterning-system-completed.git
+    Set-Location ghcp-digital-patterning-system-completed
+    ```
+
+3. Confirm .NET 8 is available:
+
+    ```powershell
+    dotnet --info
+    ```
+
+4. Restore and build the solution:
+
+    ```powershell
+    dotnet restore workspace/csharp/PatterningSimulator.sln
+    dotnet build workspace/csharp/PatterningSimulator.sln --configuration Debug
+    ```
+
+5. Optionally run the C# tests:
+
+    ```powershell
+    dotnet test workspace/csharp/PatterningSimulator.sln --configuration Debug
+    ```
+
+6. Launch the WPF dashboard:
+
+    ```powershell
+    dotnet run --project workspace/csharp/PatterningOperatorDashboard
+    ```
+
+Expected result: the WPF shell launches with upload, channel mapping, simulation, and report tabs.
+
+## Fork And Clone
+
+Forking is recommended when you plan to edit the repository, open pull requests, or use it as a workshop sandbox.
+
+1. On GitHub, select **Fork**.
+2. Clone your fork:
+
+    ```bash
+    git clone https://github.com/YOUR-USERNAME/ghcp-digital-patterning-system-completed.git
+    cd ghcp-digital-patterning-system-completed
+    ```
+
+3. Verify the solution builds:
+
+    ```bash
+    dotnet build workspace/csharp/PatterningSimulator.sln --configuration Debug
+    ```
+
+If your organization uses GitHub Enterprise Managed Users and cannot fork external repositories, create an empty
+repository in your allowed namespace, clone this source repository, then change `origin` to your new repository:
+
+```bash
+git clone https://github.com/multi-layer-perceptron/ghcp-digital-patterning-system-completed.git
+cd ghcp-digital-patterning-system-completed
+git remote set-url origin https://github.com/YOUR-ORG-OR-USER/ghcp-digital-patterning-system-completed.git
+git push --all origin
+git push --tags origin
+```
+
+## Getting Started Tutorial
+
+### Validate The Stack
+
+Run these commands from the repository root. Codespaces and the dev container already include the required tools.
+
+### C# Workflow
+
+```bash
+dotnet test workspace/csharp/PatterningSimulator.sln --configuration Debug
+```
+
+Expected result: 18 xUnit tests pass across upload validation, channel mapping, lifecycle control, reports, and timing
+checks.
+
+### C++ Pattern Processor
+
+```bash
+cmake -S workspace/cpp -B workspace/cpp/build
+cmake --build workspace/cpp/build
+ctest --test-dir workspace/cpp/build --output-on-failure
+```
+
+Expected result: image metadata, palette extraction, channel mapping, grid conversion, and command-generation tests pass.
+
+### C Control Emulator
+
+```bash
+cmake -S workspace/control-c -B workspace/control-c/build
+cmake --build workspace/control-c/build
+ctest --test-dir workspace/control-c/build --output-on-failure
+```
+
+Expected result: the C lifecycle and protocol helper test passes.
+
+### SQL With SQLite In Docker
+
+```bash
+bash workspace/sql/validate-sqlite-container.sh
+```
+
+Expected result: the script starts a disposable SQLite container, applies the schema, and lists the expected simulator
+tables.
+
+### FPGA And Gateway Stubs
+
+```bash
+ghdl -a workspace/fpga/signal_map.vhd workspace/fpga/signal_map_tb.vhd
+ghdl -e signal_map_tb
+ghdl -r signal_map_tb --stop-time=20ns
+```
+
+```bash
+dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway plc --port 5120 --scenarios workspace/plc/scenarios/basic-run.json
+dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway fpga --port 5130 --signal-map workspace/fpga/signal_map.vhd
+```
+
+Expected result: GHDL stops at 20 ns, and both gateway commands print a `status.update:*:ready` response.
+
+## Useful Commands
+
+| Task | Command |
+| --- | --- |
+| Build C# solution | `dotnet build workspace/csharp/PatterningSimulator.sln --configuration Debug` |
+| Run C# tests | `dotnet test workspace/csharp/PatterningSimulator.sln --configuration Debug` |
+| Run WPF dashboard on Windows | `dotnet run --project workspace/csharp/PatterningOperatorDashboard` |
+| Build C++ processor | `cmake -S workspace/cpp -B workspace/cpp/build && cmake --build workspace/cpp/build` |
+| Test C++ processor | `ctest --test-dir workspace/cpp/build --output-on-failure` |
+| Build C emulator | `cmake -S workspace/control-c -B workspace/control-c/build && cmake --build workspace/control-c/build` |
+| Test C emulator | `ctest --test-dir workspace/control-c/build --output-on-failure` |
+| Validate SQL schema | `bash workspace/sql/validate-sqlite-container.sh` |
+| Run PLC gateway stub | `dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway plc --port 5120 --scenarios workspace/plc/scenarios/basic-run.json` |
+| Run FPGA gateway stub | `dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway fpga --port 5130 --signal-map workspace/fpga/signal_map.vhd` |
 
 ## Project Layout
 
 ```text
-/
-├── workspace/                  # Runnable simulation (FastAPI + TypeScript)
-│   ├── api/                    #   FastAPI backend, routes, WebSocket lifecycle
-│   ├── simulation/             #   Pattern engine, dispatcher, tick model
-│   ├── tests/                  #   unittest regression suite
-│   ├── ui/                     #   HTML template, TypeScript source, CSS, JS
-│   └── scripts/                #   Convenience wrappers
-├── docs/
-│   ├── prd-specify-digital-patterning-system.md   # Product Requirements Document
-│   ├── prd-elevator-dispatch.md           # Workshop elevator-dispatch PRD
-│   └── images/                 #   Architecture diagrams, screenshots, infographic
-├── .github/
-│   ├── copilot-instructions.md # Global Copilot context
-│   ├── prompts/                # Reusable .prompt.md files for Copilot agent mode
-│   ├── instructions/           # Path-scoped Copilot instructions
-│   ├── skills/                 # Self-contained skill packages (SKILL.md + assets)
-│   └── agents/                 # Agent definitions
-└── .devcontainer/              # Codespaces / Dev Container configuration
+workspace/
+  assets/samples/                 Generic sample concept metadata and PNG asset
+  csharp/
+    PatterningSimulator.sln        .NET solution
+    Patterning.Core/               Domain models, services, protocol contracts, reports
+    Patterning.Infrastructure/     SQL repositories, TCP client, PLC/FPGA gateway stubs
+    Patterning.GatewayHost/        CLI host for gateway proof stubs
+    Patterning.Tests/              xUnit workflow and timing tests
+    PatterningOperatorDashboard/   WPF operator dashboard shell
+  cpp/                             C++17 image analysis, palette, mapping, grid, command logic
+  control-c/                       C11 control emulator and protocol helpers
+  fpga/                            VHDL signal-map stub and GHDL testbench
+  plc/                             Structured Text lifecycle stub and scenario fixture
+  sql/                             SQL contract, SQLite validation schema, container runner
+specs/001-digital-patterning-simulator/
+  spec.md                          Feature specification
+  plan.md                          Implementation plan
+  tasks.md                         Completed task plan
+  quickstart.md                    Full validation flow
+  contracts/                       TCP/IP and SQL contracts
+docs/
+  prd-specify-digital-patterning-system.md
+  images/digitial-patterning-infographic.svg
 ```
 
----
+## Control Flow
 
-## Prerequisites
-
-| Setup Path | Requirements |
-| --- | --- |
-| GitHub Codespaces | Devcontainer installs all dependencies automatically. |
-| VS Code Dev Containers | Docker Desktop + Dev Containers extension. |
-| Manual local | Python 3.10+, Node.js LTS, npm, Git. |
-| Full C# / .NET stack | .NET 8 SDK, Visual Studio 2022 or VS Code with C# Dev Kit. |
-| FPGA simulation | ModelSim or Vivado Simulator (local install; not in devcontainer). |
-| PLC runtime | CODESYS or TwinCAT SoftPLC (Windows host). |
-
----
-
-## Quick Start (Simulation Layer)
-
-```bash
-# 1. Clone or open in Codespaces
-# Note: this is the completed workshop solution repository. A starter template may be available
-# from your facilitator. Replace the URL below with your assigned repository if different.
-git clone https://github.com/ms-mfg-community/ghcp-digital-patterning-system-completed.git
-cd ghcp-digital-patterning-system-completed/workspace
-
-# 2. Create virtual environment and install Python dependencies
-python -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-
-# 3. Install TypeScript / Node dependencies
-npm install
-
-# 4. Start the simulation API
-python -m uvicorn api.server:app --host 0.0.0.0 --reload --port 7000
-
-# 5. Open the dashboard
-open http://127.0.0.1:7000
+```mermaid
+flowchart TD
+    User[Operator or workshop user] --> Dashboard[WPF dashboard shell]
+    Dashboard --> Core[C# workflow services]
+    Core --> Diagnostics[Diagnostic service]
+    Diagnostics -->|no blocking errors| Lifecycle[Simulation lifecycle service]
+    Diagnostics -->|blocking errors| Blocked[Blocked simulation state]
+    Lifecycle --> GatewayHost[C# gateway host]
+    GatewayHost --> PlcGateway[PLC gateway stub]
+    GatewayHost --> FpgaGateway[FPGA timing gateway stub]
+    PlcGateway --> ControlC[C control emulator]
+    FpgaGateway --> Vhdl[VHDL signal map]
+    ControlC --> Status[status.update response]
+    Vhdl --> Timing[timing valid response]
+    Status --> Core
+    Timing --> Core
+    Core --> Dashboard
 ```
 
-### With PostgreSQL Persistence
+## Data Flow
 
-```bash
-DATABASE_URL=postgresql://patterning:patterning@postgres:5432/patterning_db \
-  python -m uvicorn api.server:app --host 0.0.0.0 --reload --port 7000
+```mermaid
+flowchart LR
+    Sample[Generic PNG/JPEG sample] --> Upload[C# upload validation]
+    Upload --> Metadata[C++ metadata extraction]
+    Upload --> Palette[C++ palette extraction]
+    Palette --> Channels[Eight manufacturing channels]
+    Channels --> Mapping[C++/C# channel mapping]
+    Mapping --> Grid[C++ grid conversion]
+    Grid --> Commands[C++ command generation]
+    Mapping --> Diagnostics[Manufacturability diagnostics]
+    Grid --> Report[Concept report model]
+    Diagnostics --> Report
+    Commands --> Simulation[Simulation run summary]
+    Simulation --> Report
+    Report --> Json[JSON export]
+    Report --> Html[Printable HTML export]
+    Upload --> Sql[(SQL contract / SQLite validation schema)]
+    Mapping --> Sql
+    Grid --> Sql
+    Simulation --> Sql
 ```
 
----
+## Implemented Workflow
 
-## Running Tests
+1. Validate or select a generic PNG/JPEG sample design.
+2. Extract image metadata and a representative color palette.
+3. Configure eight generic manufacturing channels.
+4. Map palette colors to exact, approximate, or unresolved channel assignments.
+5. Convert the mapped design into 64, 128, or 256 production grids.
+6. Apply blocking diagnostics before simulation starts.
+7. Simulate start, pause, resume, reset, PLC gateway, and FPGA timing gateway behavior.
+8. Export structured JSON or printable HTML concept reports.
 
-```bash
-cd workspace
-source .venv/bin/activate
-python -m compileall api simulation tests
-python -m unittest discover -s tests -v
-npm run build
-```
+## Key Documentation
 
----
+- [Product Requirements Document](docs/prd-specify-digital-patterning-system.md)
+- [Feature Quickstart](specs/001-digital-patterning-simulator/quickstart.md)
+- [Feature Specification](specs/001-digital-patterning-simulator/spec.md)
+- [Implementation Plan](specs/001-digital-patterning-simulator/plan.md)
+- [Completed Task List](specs/001-digital-patterning-simulator/tasks.md)
+- [TCP/IP Command Protocol](specs/001-digital-patterning-simulator/contracts/tcp-command-protocol.md)
+- [SQL Contract](specs/001-digital-patterning-simulator/contracts/sql-schema.sql)
 
-## GitHub Copilot Integration
+## Notes For Workshop Facilitators
 
-This repository ships with a complete set of Copilot customizations:
-
-### Custom Prompts (`.github/prompts/`)
-
-| Prompt File | Purpose |
-| --- | --- |
-| `00.00.meta-prompt.prompt.md` | Meta-prompt for Copilot agent orientation |
-| `00.00.update-readme-and-prd.prompt.md` | Update README and PRD from sprint changes |
-| `01.00.initialize-project.prompt.md` | Bootstrap the simulation workspace |
-| `10.00.fpga-signal-map.prompt.md` | Generate FPGA signal-to-pixel mapping stubs |
-| `10.01.plc-dye-head-control.prompt.md` | Scaffold PLC dye-head control routines |
-| `10.02.pattern-renderer-csharp.prompt.md` | Generate C# pattern rendering classes |
-| `10.03.misfire-detection.prompt.md` | Add misfire detection with unit tests |
-| `10.04.sql-schema-migration.prompt.md` | Generate T-SQL migration for pattern events |
-| `10.05.azure-iot-edge-deploy.prompt.md` | Deploy pattern engine module to Azure IoT Edge |
-
-### Path-Scoped Instructions (`.github/instructions/`)
-
-| Instruction File | Scope |
-| --- | --- |
-| `digital-patterning.instructions.md` | All files under `workspace/**` |
-| `csharp-wpf.instructions.md` | C# and WPF source files |
-| `fpga-vhdl.instructions.md` | VHDL / Verilog source files |
-| `unittest-conventions.instructions.md` | Test files under `workspace/tests/` |
-| `azure-deployment.instructions.md` | Azure IaC and deployment files |
-| `ui-typescript.instructions.md` | TypeScript files under `workspace/ui/` |
-
-### Skills (`.github/skills/`)
-
-| Skill | Description |
-| --- | --- |
-| `fpga-simulation` | Self-contained skill to scaffold and run FPGA signal simulation stubs |
-| `plc-integration` | Skill to generate and validate PLC integration wiring |
-| `postgres-devcontainer` | Add PostgreSQL sidecar to devcontainer |
-| `postgres-schema-inspection` | Inspect and test the pattern-events schema |
-| `postgres-data-persistence` | Wire pattern event writes to PostgreSQL |
-| `add-basement-level` | Add sub-floor support to the simulation (elevator workshop reference) |
-
-### Agents (`.github/agents/`)
-
-Custom agent definitions are stored in `.github/agents/`. Agents have access to the repository, devcontainer runtime,
-and Copilot coding capabilities. See individual agent YAML files for trigger conditions and tool permissions.
-
----
-
-## Architecture Overview
-
-```text
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                         Digital Patterning System                            │
-│                                                                              │
-│  ┌─────────────────┐   TCP/IP   ┌──────────────────┐   FPGA Bus             │
-│  │  WPF Operator   │◄──────────►│  C# Pattern      │◄──────────►┌──────────┐│
-│  │  Dashboard      │            │  Engine Service  │            │  FPGA    ││
-│  │  (.NET 8 / WPF) │            │  (.NET 8 Web API) │           │  DSP     ││
-│  └─────────────────┘            └──────────────────┘            │  Module  ││
-│                                         │                        └──────────┘│
-│  ┌─────────────────┐           SignalR  │  SQL Server                        │
-│  │  React / TS     │◄──────────────────►│  ┌────────────────────────────┐   │
-│  │  Design Portal  │                    │  │  pattern_jobs              │   │
-│  │  (Node.js)      │                    │  │  dye_head_events           │   │
-│  └─────────────────┘                    │  │  pattern_definitions       │   │
-│                                         │  └────────────────────────────┘   │
-│  ┌─────────────────────────────────┐    │                                   │
-│  │  PLC Control Layer              │    │  Azure IoT Edge                   │
-│  │  (IEC 61131-3 Structured Text)  │◄───┘  ┌─────────────────────────────┐  │
-│  │  Dye heads · Conveyors · Vision │       │  Pattern Engine Module      │  │
-│  └─────────────────────────────────┘       │  Telemetry · MQTT · OPC-UA  │  │
-│                                            └─────────────────────────────┘  │
-└──────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Workshop Labs
-
-| Lab | Title | Key Skills |
-| --- | --- | --- |
-| Lab 01 | Initialize project & run simulation | Python, FastAPI, Copilot Chat |
-| Lab 02 | Add PostgreSQL persistence | Docker, SQL, Copilot agent mode |
-| Lab 03 | PR review with Copilot | Git, PR workflow, inline review |
-| Lab 04 | Migrate to Azure | Azure Container Apps, `azd`, IaC |
-| Lab 10 | FPGA signal map scaffolding | FPGA, VHDL, Copilot prompt files |
-| Lab 11 | PLC dye-head control | PLC, Structured Text, Copilot skills |
-| Lab 12 | C# pattern renderer | C#, .NET, WPF, xUnit |
-| Lab 13 | Misfire detection + SQL migration | C#, T-SQL, Entity Framework, tests |
-| Lab 14 | Azure IoT Edge deployment | Azure IoT Edge, MQTT, `azd` |
-
----
-
-## Azure Deployment
-
-The production-style pattern engine is deployed to **Azure Container Apps** with an optional **Azure Database for
-PostgreSQL Flexible Server** for event persistence. The reference workshop endpoint below is an example — replace it
-with your own deployment URL after running `azd deploy`:
-
-```
-https://ca-patterning-dev.<your-unique-suffix>.eastus2.azurecontainerapps.io/
-```
-
-Deployment commands:
-
-```bash
-azd env get-values
-azd deploy
-az containerapp revision list \
-  --name ca-patterning-dev \
-  --resource-group rg-patterning \
-  --query '[].{name:name,active:properties.active,traffic:properties.trafficWeight}' \
-  -o table
-```
-
----
-
-## Extension Points
-
-| Area | Good Workshop Changes |
-| --- | --- |
-| `simulation/dispatcher.py` | Try alternative pattern dispatch heuristics. |
-| `simulation/simulation.py` | Adjust tick lifecycle, dye-head spawning, pause/resume. |
-| `api/database.py` | Extend optional pattern-event persistence. |
-| `api/server.py` | Add validated endpoints for pattern jobs or dye-head status. |
-| `ui/main.ts` / `ui/static/styles.css` | Extend the live patterning dashboard. |
-| `tests/` | Add focused `unittest` coverage for pattern and dispatcher changes. |
-
----
-
-## Contributing
-
-1. Fork the repository or open it in GitHub Codespaces.
-2. Create a feature branch: `git checkout -b feature/my-change`
-3. Make changes with GitHub Copilot assistance.
-4. Run tests: `python -m unittest discover -s workspace/tests -v`
-5. Open a pull request — Copilot will summarize your diff automatically.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) if present, or the workshop facilitator guide in `docs/`.
-
----
-
-## Role Context: Development Software Engineer
-
-**Location:** Representative manufacturing site · **Team:** Digital patterning systems
-**Salary range:** $75K – $95K · **Education:** BS minimum (Computer Engineering preferred); MS/PhD considered
-
-**Responsibilities:** Architect, design, implement, test, install, and document software applications for lab,
-industrial, and design environments globally. System-architecture freedom in a small-team, fast-paced environment.
-
-**Stack signals:** C# · C++ · C · Visual Basic · SQL · TCP/IP · Windows · Linux · FPGA · PLCs · Robotics
-
-**Why GitHub Copilot matters here:**
-- Industrial patterning software spans 6+ languages and real-time hardware interfaces.
-- Small team; each engineer owns broad vertical slices (FPGA ↔ PLC ↔ C# ↔ SQL ↔ UI).
-- Copilot accelerates context switching across languages, generates hardware-interface stubs, and drafts SQL migrations.
-- Azure DevOps · Azure IoT Edge · Azure App Service modernization stories map directly to this stack.
-
----
+- The project is generic and uses synthetic sample data.
+- The WPF dashboard is a Windows desktop surface; Codespaces is for validation and service stubs.
+- The SQL Server-compatible contract is preserved, while repeatable local validation uses SQLite in Docker.
+- The `digitial` spelling in the infographic file name is retained to match the existing repository asset path.
 
 ## License
 
-[MIT](LICENSE) — fictitious workshop scenario
-
----
-
-## Related Documentation
-
-- [Product Requirements Document](docs/prd-specify-digital-patterning-system.md)
-- [Elevator Dispatch Workshop PRD](docs/prd-elevator-dispatch.md)
-- [Azure Deployment Instructions](.github/instructions/azure-deployment.instructions.md)
-- [Copilot Instructions](.github/copilot-instructions.md)
+[MIT](LICENSE)
