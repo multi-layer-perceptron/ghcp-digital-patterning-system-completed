@@ -10,6 +10,7 @@ using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using Patterning.Core.Models;
 using Patterning.Core.Services;
+using PatterningOperatorDashboard.Services;
 using PatterningOperatorDashboard.ViewModels;
 using ImageMetadata = Patterning.Core.Models.ImageMetadata;
 
@@ -68,6 +69,8 @@ public partial class UploadDesignView : UserControl
             viewModel.Concept = analyzed.Concept;
             viewModel.Metadata = analyzed.Metadata;
             viewModel.Palette = analyzed.Palette;
+            SessionState.Current.Concept = analyzed.Concept;
+            SessionState.Current.Palette = analyzed.Palette;
             viewModel.StatusMessage = $"Analyzed {fileInfo.Name} — {metadata.WidthPx} × {metadata.HeightPx}, {palette.Colors.Count} palette colors.";
         }
         catch (Exception ex)
@@ -119,6 +122,8 @@ public partial class UploadDesignView : UserControl
             viewModel.Concept = analyzed.Concept;
             viewModel.Metadata = analyzed.Metadata;
             viewModel.Palette = analyzed.Palette;
+            SessionState.Current.Concept = analyzed.Concept;
+            SessionState.Current.Palette = analyzed.Palette;
             viewModel.StatusMessage = $"Loaded sample '{sourceName}' — {widthPx} × {heightPx}, {palette.Colors.Count} synthetic palette colors.";
         }
         catch (Exception ex)
