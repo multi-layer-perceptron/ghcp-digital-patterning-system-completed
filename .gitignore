@@ -68,3 +68,5 @@ work-*.cf
 
 # Local environment files
 .env*
+
+.fake
