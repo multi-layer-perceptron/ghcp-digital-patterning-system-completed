@@ -233,8 +233,16 @@ detection with `FTK1011` file-tracking errors in generated `.tlog` files. In tha
 **Native: Test C++ And C** or run the C++ workflow with a short external build directory:
 
 ```powershell
+# Configure CMake with -S pointing to the in-repo source directory and -B pointing to a short external
+# build directory under C:/temp to avoid MSBuild FileTracker FTK1011 errors from long OneDrive paths.
 cmake -S workspace/cpp -B C:/temp/ghcp-digital-patterning-system-completed/cpp-build
+
+# Compile the pattern processor and its test binaries from the short external build directory using
+# the Debug configuration, which matches the committed VS Code tasks.
 cmake --build C:/temp/ghcp-digital-patterning-system-completed/cpp-build --config Debug
+
+# Run the CTest suite from the short external build directory in Debug mode and print failure details
+# if any test fails.
 ctest --test-dir C:/temp/ghcp-digital-patterning-system-completed/cpp-build -C Debug --output-on-failure
 ```
 
@@ -259,8 +267,16 @@ For local Windows validation from a long synced path, use the committed VS Code 
 external build directory:
 
 ```powershell
+# Configure CMake with -S pointing to the in-repo source directory and -B pointing to a short external
+# build directory under C:/temp to avoid MSBuild FileTracker FTK1011 errors from long OneDrive paths.
 cmake -S workspace/control-c -B C:/temp/ghcp-digital-patterning-system-completed/control-c-build
+
+# Compile the control emulator and its test binary from the short external build directory using the
+# Debug configuration, which matches the committed VS Code tasks.
 cmake --build C:/temp/ghcp-digital-patterning-system-completed/control-c-build --config Debug
+
+# Run the CTest suite from the short external build directory in Debug mode and print failure details
+# if any test fails.
 ctest --test-dir C:/temp/ghcp-digital-patterning-system-completed/control-c-build -C Debug --output-on-failure
 ```
 
@@ -277,11 +293,45 @@ tables.
 
 ### FPGA And Gateway Stubs
 
+Use the default commands in Codespaces, the Dev Container, and typical Linux/macOS shells (GHDL is preinstalled in the
+devcontainer image):
+
 ```bash
+# Analyze (compile) the VHDL entity and its testbench together.
 ghdl -a workspace/fpga/signal_map.vhd workspace/fpga/signal_map_tb.vhd
+
+# Elaborate the testbench entity into an executable simulation.
 ghdl -e signal_map_tb
+
+# Run the simulation, stopping after 20 ns of simulated time.
 ghdl -r signal_map_tb --stop-time=20ns
 ```
+
+On local Windows clones, GHDL is **not** bundled with Visual Studio or the .NET SDK and is not on PATH by default. If
+`ghdl` reports `The term 'ghdl' is not recognized`, install one of the supported Windows builds (the `mcode` backend is
+the simplest because it requires no LLVM or GCC toolchain), then re-open PowerShell and re-run the commands above:
+
+```powershell
+# Option 1 - Scoop (no admin required). Install Scoop first if you do not already have it.
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+
+# Install GHDL from Scoop's main bucket (ships the mcode backend on Windows; no LLVM or GCC required).
+scoop install main/ghdl
+
+# Option 2 - Manual install from the official GHDL GitHub releases.
+# 1. Download the latest ghdl-<version>-mingw64-mcode.zip from https://github.com/ghdl/ghdl/releases
+# 2. Extract to C:\Tools\ghdl
+# 3. Add C:\Tools\ghdl\bin to your User PATH (System Properties > Environment Variables).
+
+# Verify in a NEW PowerShell window so PATH is refreshed.
+ghdl --version
+```
+
+GHDL is only required for the FPGA lab. The C++, C, .NET, SQL, and PLC labs work without it, and the FPGA lab also runs
+unchanged in Codespaces or the Dev Container if you prefer not to install GHDL on Windows.
+
+After GHDL is available, start the gateway stubs:
 
 ```bash
 dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway plc --port 5120 --scenarios workspace/plc/scenarios/basic-run.json
