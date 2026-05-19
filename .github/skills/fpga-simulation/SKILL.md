@@ -1,6 +1,6 @@
 # Skill: FPGA Signal Map Simulation
 
-This skill scaffolds and validates the Millitron FPGA signal-to-pixel mapping module for the digital patterning
+This skill scaffolds and validates the digital patterning FPGA signal-to-pixel mapping module for the digital patterning
 workshop. It is a self-contained unit that can be invoked from Copilot agent mode or run standalone.
 
 ## What This Skill Does
@@ -87,4 +87,4 @@ def map_pixel_to_activation(pixel_byte: int, pixel_index: int, dye_head_count: i
 
 - Prompt: [.github/prompts/10.00.fpga-signal-map.prompt.md](../../prompts/10.00.fpga-signal-map.prompt.md)
 - Instructions: [.github/instructions/fpga-vhdl.instructions.md](../../instructions/fpga-vhdl.instructions.md)
-- PRD: [docs/prd-digital-patterning-system.md](../../../../docs/prd-digital-patterning-system.md)
+- PRD: [docs/prd-specify-digital-patterning-system.md](../../../../docs/prd-specify-digital-patterning-system.md)

@@ -1,0 +1,9 @@
+{
+  "id": "generic-floorcovering-sample",
+  "source_name": "generic-floorcovering-sample.png",
+  "mime_type": "image/png",
+  "file_size_bytes": 256,
+  "width_px": 16,
+  "height_px": 16,
+  "description": "Synthetic generic floorcovering sample for workshop validation."
+}

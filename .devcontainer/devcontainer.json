@@ -37,14 +37,17 @@
         "ghcr.io/devcontainers/features/node:1": {
             "version": "lts"
         },
+        "ghcr.io/devcontainers/features/dotnet:2": {
+            "version": "8.0"
+        },
         "ghcr.io/devcontainers-extra/features/apt-get-packages:1": {
-            "packages": "postgresql-client,jq,less"
+            "packages": "postgresql-client,jq,less,cmake,ghdl,sqlite3"
         },
         "ghcr.io/devcontainers/features/sshd:1": {
             "version": "latest"
         }
     },
-    "postCreateCommand": "cd workspace && python -m venv .venv && . .venv/bin/activate && python -m pip install -r requirements.txt && npm install && az bicep install && sudo npm install -g @modelcontextprotocol/inspector && gh extension install github/gh-copilot",
+    "postCreateCommand": "cd workspace && python -m venv .venv && . .venv/bin/activate && python -m pip install -r requirements.txt && npm install && az bicep install && sudo npm install -g @modelcontextprotocol/inspector && python -m pip install uv && python -m uv tool install --force specify-cli --from git+https://github.com/github/spec-kit.git@v0.8.11 && gh extension install github/gh-copilot",
     "customizations": {
         "vscode": {
             "extensions": [

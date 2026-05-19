@@ -2,10 +2,10 @@
 applyTo: "workspace/fpga/**"
 ---
 
-# FPGA / VHDL Conventions — Millitron Signal Processing
+# FPGA / VHDL Conventions — Digital Patterning Signal Processing
 
 These instructions apply to all VHDL and Verilog files under `workspace/fpga/`. Follow these conventions when
-generating, reviewing, or editing HDL code for the Millitron FPGA signal-processing module.
+generating, reviewing, or editing HDL code for the digital patterning FPGA signal-processing module.
 
 ## VHDL Standard
 
@@ -54,7 +54,7 @@ workspace/fpga/
 -- ============================================================================
 -- Module  : SignalMap
 -- Purpose : Map pattern pixel bytes to dye-head pulse-width values
--- Author  : Millitron Floorcovering Development
+-- Author  : Digital Patterning Workshop Team
 -- Modified: 2026-05-14
 -- ============================================================================
 ```

@@ -4,12 +4,12 @@ applyTo: "workspace/**"
 
 # Digital Patterning System — Domain Instructions
 
-These instructions apply to all files under `workspace/` in the Millitron Digital Patterning System repository.
+These instructions apply to all files under `workspace/` in the Digital Patterning System repository.
 GitHub Copilot should follow these conventions when generating, reviewing, or editing code in this workspace.
 
 ## Domain Context
 
-This repository simulates the Millitron Digital Patterning System — a proprietary industrial platform used in
+This repository simulates a Digital Patterning System — a representative industrial platform used in
 floorcovering manufacturing. The simulation core is Python / FastAPI, but the production system uses:
 - C# / .NET 8 for the Pattern Engine service and WPF operator dashboard
 - VHDL / Verilog on FPGA for real-time signal processing

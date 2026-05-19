@@ -2,10 +2,10 @@
 applyTo: "workspace/csharp/**/*.cs"
 ---
 
-# C# / WPF Conventions — Millitron Pattern Engine
+# C# / WPF Conventions — Digital Pattern Engine
 
 These instructions apply to all C# files under `workspace/csharp/`. Follow these conventions when generating,
-reviewing, or editing C# code for the Millitron Pattern Engine service or WPF operator dashboard.
+reviewing, or editing C# code for the digital Pattern Engine service or WPF operator dashboard.
 
 ## Framework and Language Versions
 

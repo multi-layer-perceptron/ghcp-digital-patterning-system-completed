@@ -1,8 +1,8 @@
-# Millitron Digital Patterning System
+# Digital Patterning System
 
 > **GitHub Copilot · Agentic DevOps · Deep Dive Workshop**
-> *A fictitious-but-realistic day-in-the-life scenario for a Development Software Engineer on the Floorcovering
-> Development (Digital Patterning Systems) team — Spartanburg, SC.*
+> *A fictitious-but-realistic day-in-the-life scenario for a Development Software Engineer on a digital patterning
+> systems team.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-green.svg)](https://python.org)
@@ -14,20 +14,20 @@
 
 ## Overview
 
-The **Millitron Digital Patterning System** is a proprietary industrial software platform that drives digital textile
-printing machines used in floorcovering manufacturing. Engineers on the Floorcovering Development team architect,
+The **Digital Patterning System** is a realistic industrial software reference platform that drives digital textile
+printing machines used in floorcovering manufacturing. Engineers on a digital patterning systems team architect,
 implement, test, and deploy software spanning real-time PLC control, FPGA signal processing, a C# / .NET WPF operator
 dashboard, and a TypeScript / React web-based design portal — all connected through a TCP/IP fabric and backed by SQL
 Server.
 
 This repository serves as a GitHub Copilot workshop that demonstrates **Agentic DevOps** workflows across the full
-Millitron stack. Participants follow a realistic _day-in-the-life_ scenario for a Development Software Engineer:
+digital patterning stack. Participants follow a realistic _day-in-the-life_ scenario for a Development Software Engineer:
 morning stand-up, feature branch, Copilot-assisted implementation across C# / FPGA / PLC layers, PR review, CI/CD
 pipeline, and Azure IoT Edge deployment — all with GitHub Copilot as an active pair-programmer.
 
 ### Workshop Infographic
 
-![Millitron System Infographic](docs/images/millitron-infographic.svg)
+![Digital Patterning System Infographic](docs/images/digitial-patterning-infographic.svg)
 
 ---
 
@@ -77,7 +77,7 @@ pipeline, and Azure IoT Edge deployment — all with GitHub Copilot as an active
 │   ├── ui/                     #   HTML template, TypeScript source, CSS, JS
 │   └── scripts/                #   Convenience wrappers
 ├── docs/
-│   ├── prd-digital-patterning-system.md   # Product Requirements Document
+│   ├── prd-specify-digital-patterning-system.md   # Product Requirements Document
 │   ├── prd-elevator-dispatch.md           # Workshop elevator-dispatch PRD
 │   └── images/                 #   Architecture diagrams, screenshots, infographic
 ├── .github/
@@ -200,7 +200,7 @@ and Copilot coding capabilities. See individual agent YAML files for trigger con
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│                        Millitron Digital Patterning System                   │
+│                         Digital Patterning System                            │
 │                                                                              │
 │  ┌─────────────────┐   TCP/IP   ┌──────────────────┐   FPGA Bus             │
 │  │  WPF Operator   │◄──────────►│  C# Pattern      │◄──────────►┌──────────┐│
@@ -243,7 +243,7 @@ and Copilot coding capabilities. See individual agent YAML files for trigger con
 
 ## Azure Deployment
 
-The production Millitron pattern engine is deployed to **Azure Container Apps** with an optional **Azure Database for
+The production-style pattern engine is deployed to **Azure Container Apps** with an optional **Azure Database for
 PostgreSQL Flexible Server** for event persistence. The reference workshop endpoint below is an example — replace it
 with your own deployment URL after running `azd deploy`:
 
@@ -292,7 +292,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) if present, or the workshop facilitator g
 
 ## Role Context: Development Software Engineer
 
-**Location:** Spartanburg, SC · **Team:** Floorcovering Development (Digital Patterning Systems)
+**Location:** Representative manufacturing site · **Team:** Digital patterning systems
 **Salary range:** $75K – $95K · **Education:** BS minimum (Computer Engineering preferred); MS/PhD considered
 
 **Responsibilities:** Architect, design, implement, test, install, and document software applications for lab,
@@ -301,7 +301,7 @@ industrial, and design environments globally. System-architecture freedom in a s
 **Stack signals:** C# · C++ · C · Visual Basic · SQL · TCP/IP · Windows · Linux · FPGA · PLCs · Robotics
 
 **Why GitHub Copilot matters here:**
-- Proprietary industrial software (Millitron) spans 6+ languages and real-time hardware interfaces.
+- Industrial patterning software spans 6+ languages and real-time hardware interfaces.
 - Small team; each engineer owns broad vertical slices (FPGA ↔ PLC ↔ C# ↔ SQL ↔ UI).
 - Copilot accelerates context switching across languages, generates hardware-interface stubs, and drafts SQL migrations.
 - Azure DevOps · Azure IoT Edge · Azure App Service modernization stories map directly to this stack.
@@ -310,13 +310,13 @@ industrial, and design environments globally. System-architecture freedom in a s
 
 ## License
 
-[MIT](LICENSE) © Milliken & Company (fictitious workshop scenario)
+[MIT](LICENSE) — fictitious workshop scenario
 
 ---
 
 ## Related Documentation
 
-- [Product Requirements Document](docs/prd-digital-patterning-system.md)
+- [Product Requirements Document](docs/prd-specify-digital-patterning-system.md)
 - [Elevator Dispatch Workshop PRD](docs/prd-elevator-dispatch.md)
 - [Azure Deployment Instructions](.github/instructions/azure-deployment.instructions.md)
 - [Copilot Instructions](.github/copilot-instructions.md)
