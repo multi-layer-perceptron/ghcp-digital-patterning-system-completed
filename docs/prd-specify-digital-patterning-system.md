@@ -54,7 +54,48 @@ details or requiring physical equipment.
 | Design Reviewer | Inspect concept output summaries | Reviews palette, mapping, diagnostics, grid, and report outputs |
 | Controls Engineer | Understand lifecycle and timing boundaries | Reviews PLC, C emulator, TCP/IP, and FPGA stubs together |
 
+## Setup And Access Requirements
+
+The product baseline shall document setup choices in the same workshop-friendly style as the root README: required tools,
+which tools are included by the devcontainer, what requires Windows, and what permissions a participant needs before a
+session begins.
+
+### Prerequisite Assumptions
+
+| Requirement | Product Expectation |
+| --- | --- |
+| GitHub account | Users can clone or fork the repository and open Codespaces when available. |
+| Git | Users can clone the source or their fork and manage remotes for workshop changes. |
+| VS Code | Users can open the repository locally, in Codespaces, or in a Dev Container. |
+| GitHub Copilot | Recommended for workshop exercises; not required to run simulator validation commands. |
+
+### Supported Setup Paths
+
+| Path | Purpose | Included Or Required Tools |
+| --- | --- | --- |
+| GitHub Codespaces | Primary workshop validation path with minimal local setup | Devcontainer-provided .NET 8, CMake, GHDL, SQLite, Docker-in-Docker, Node.js, GitHub CLI, and Spec Kit |
+| VS Code Dev Container | Local containerized validation path | VS Code, Dev Containers extension, Docker Desktop or compatible container engine |
+| Manual Linux setup | Direct local validation path | .NET 8 SDK, CMake, C++17 compiler, C11 compiler, Docker, SQLite, and GHDL |
+| Windows dashboard | Required path for the WPF operator dashboard GUI | Windows 10 or later, Git for Windows, .NET 8 SDK, optional Visual Studio 2022 or VS Code with C# Dev Kit |
+
+### Permissions And Licensing
+
+| Scenario | Product Expectation |
+| --- | --- |
+| Run validation commands | Read access to the repository and permission to run local or containerized tools. |
+| Use Codespaces | Codespaces enabled for the user's GitHub account or organization. |
+| Fork for workshop edits | Permission to fork public repositories, or permission to create a copy inside an approved organization namespace. |
+| Push changes or open pull requests | Write access to the user's fork or target repository. |
+| Use GitHub Copilot workflows | Copilot license assigned by the user or organization. |
+
+The baseline is licensed under MIT. If an organization restricts Codespaces, Copilot, Docker, or GitHub Actions through
+policy, facilitators should confirm availability before the workshop.
+
 ## Getting Started Tutorial
+
+Users should first choose an environment path: Codespaces for the lowest-friction validation route, a local Dev Container
+for Docker-based local development, manual Linux setup for direct tool installation, or Windows for the WPF dashboard.
+Forking is recommended when users intend to save workshop changes, open pull requests, or adapt the simulator.
 
 ### Tutorial 1: Validate The Stack In Codespaces
 
@@ -222,6 +263,7 @@ flowchart LR
 | NFR-004 | Validation | Task list shall include passing validation coverage. | All Spec Kit tasks checked complete | Implemented |
 | NFR-005 | Confidentiality | Generated text and sample data shall avoid restricted identifiers. | Scan returns no blocked terms | Implemented |
 | NFR-006 | Reproducibility | Devcontainer shall include required validation tooling. | .NET 8, CMake, GHDL, SQLite, Docker | Implemented |
+| NFR-007 | Usability | Setup guidance shall identify prerequisites, permissions, environment paths, and Windows-only dashboard constraints. | README and PRD contain aligned setup guidance | Implemented |
 
 ## User Experience Requirements
 
@@ -248,6 +290,7 @@ flowchart LR
 - C# gateway host: CLI-driven PLC and FPGA timing gateway stubs.
 - SQL validation: `bash workspace/sql/validate-sqlite-container.sh`.
 - External services: none required for baseline local validation.
+- Repository setup: documented fork, clone, Codespaces, Dev Container, manual Linux, and Windows dashboard paths.
 
 ## Technical Approach
 
@@ -293,6 +336,8 @@ The merged baseline was validated with:
 
 - Use Codespaces/devcontainer for validation and workshop implementation tasks.
 - Use Windows with .NET 8 for the WPF dashboard GUI.
+- Use fork-and-clone guidance when participants need to save changes, work in a private/internal namespace, or open pull
+   requests.
 - Use Docker-backed SQLite validation for repeatable local schema checks.
 - No cloud resources are required for the baseline simulator.
 - Generated build artifacts are ignored by `.gitignore`, including `node_modules/`, build folders, and GHDL work files.
@@ -301,18 +346,21 @@ The merged baseline was validated with:
 
 - No authentication is required for the baseline workshop simulator.
 - No secrets are required for local validation.
+- GitHub authentication, Codespaces access, and Copilot licensing are environment prerequisites for workshop flows, not
+   simulator runtime requirements.
 - Sample data is synthetic and generic.
 - Reports and documentation use confidentiality-safe terminology.
 
 ## Dependencies
 
-- .NET 8 SDK
-- CMake / CTest
-- GCC and G++
-- Docker
-- SQLite CLI or SQLite container image
-- GHDL
-- Optional Windows desktop environment for the WPF dashboard
+| Area | Dependency |
+| --- | --- |
+| Core C# validation | .NET 8 SDK |
+| C++ and C validation | CMake, CTest, C++17 compiler, C11 compiler |
+| SQL validation | Docker and SQLite container image or SQLite CLI |
+| FPGA validation | GHDL |
+| Windows dashboard | Windows desktop environment, Git for Windows, .NET 8 SDK |
+| Workshop workflows | GitHub account, optional GitHub Copilot license, optional GitHub CLI and Spec Kit CLI |
 
 ## Risks And Mitigations
 
@@ -322,6 +370,7 @@ The merged baseline was validated with:
 | SQL Server tooling is unavailable in Codespaces | Medium | High | Provide Dockerized SQLite validation path |
 | Hardware toolchains are unavailable | Medium | Medium | Use C, C#, PLC, and VHDL stubs with local validation |
 | Simulator mistaken for production control software | High | Low | Documentation labels it as a proof-of-concept workshop simulator |
+| Participants cannot fork due to organization policy | Medium | Medium | Document creating a copy in an approved namespace and resetting the Git remote |
 
 ## Decisions
 
