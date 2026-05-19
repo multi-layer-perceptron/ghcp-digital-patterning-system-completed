@@ -9,15 +9,15 @@ services:
       - postgres
     environment:
       DATABASE_URL: >-
-        postgresql://elevator:elevator@postgres:5432/elevator_dispatch
+        postgresql://patterning:patterning@postgres:5432/digital_patterning
 
   postgres:
     image: postgres:16
     restart: unless-stopped
     environment:
-      POSTGRES_USER: elevator
-      POSTGRES_PASSWORD: elevator
-      POSTGRES_DB: elevator_dispatch
+      POSTGRES_USER: patterning
+      POSTGRES_PASSWORD: patterning
+      POSTGRES_DB: digital_patterning
     ports:
       - "5432:5432"
     volumes:

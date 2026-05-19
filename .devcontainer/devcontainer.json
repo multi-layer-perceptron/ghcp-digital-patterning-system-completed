@@ -1,19 +1,22 @@
 {
-    "name": "Elevator Dispatch Workshop",
+    "name": "Digital Patterning Workshop",
     "dockerComposeFile": "docker-compose.yml",
     "service": "app",
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
     "forwardPorts": [
-        7000,
+        5120,
+        5130,
         5432
     ],
     "portsAttributes": {
-        "7000": {
-            "label": "Elevator dashboard",
-            "onAutoForward": "openBrowser"
+        "5120": {
+            "label": "PLC gateway stub"
+        },
+        "5130": {
+            "label": "FPGA gateway stub"
         },
         "5432": {
-            "label": "Postgres"
+            "label": "PostgreSQL"
         }
     },
     "features": {
@@ -41,17 +44,16 @@
             "version": "8.0"
         },
         "ghcr.io/devcontainers-extra/features/apt-get-packages:1": {
-            "packages": "postgresql-client,jq,less,cmake,ghdl,sqlite3"
+            "packages": "postgresql-client,jq,less,cmake,build-essential,ghdl,sqlite3"
         },
         "ghcr.io/devcontainers/features/sshd:1": {
             "version": "latest"
         }
     },
-    "postCreateCommand": "cd workspace && python -m venv .venv && . .venv/bin/activate && python -m pip install -r requirements.txt && npm install && az bicep install && sudo npm install -g @modelcontextprotocol/inspector && python -m pip install uv && python -m uv tool install --force specify-cli --from git+https://github.com/github/spec-kit.git@v0.8.11 && gh extension install github/gh-copilot",
+    "postCreateCommand": "az bicep install && sudo npm install -g @modelcontextprotocol/inspector && python -m pip install --user uv && python -m uv tool install --force specify-cli --from git+https://github.com/github/spec-kit.git@v0.8.11 && (gh extension install github/gh-copilot || true)",
     "customizations": {
         "vscode": {
             "extensions": [
-                "ms-python.python",
                 "ms-azuretools.vscode-docker",
                 "ms-azuretools.vscode-containers",
                 "ms-azuretools.vscode-azureresourcegroups",
@@ -61,6 +63,10 @@
                 "ms-azuretools.vscode-bicep",
                 "HashiCorp.terraform",
                 "ckolkman.vscode-postgres",
+                "ms-dotnettools.csharp",
+                "ms-dotnettools.csdevkit",
+                "ms-vscode.cpptools",
+                "ms-vscode.cmake-tools",
                 "GitHub.copilot",
                 "GitHub.copilot-chat",
                 "GitHub.vscode-pull-request-github",

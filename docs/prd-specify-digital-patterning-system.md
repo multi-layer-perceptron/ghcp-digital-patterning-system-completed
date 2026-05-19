@@ -73,10 +73,11 @@ session begins.
 
 | Path | Purpose | Included Or Required Tools |
 | --- | --- | --- |
-| GitHub Codespaces | Primary workshop validation path with minimal local setup | Devcontainer-provided .NET 8, CMake, GHDL, SQLite, Docker-in-Docker, Node.js, GitHub CLI, and Spec Kit |
+| GitHub Codespaces | Primary workshop validation path with minimal local setup | Devcontainer-provided .NET 8, CMake, C/C++ compilers, GHDL, SQLite, Docker-in-Docker, Node.js, GitHub CLI, Spec Kit, PostgreSQL client tooling, and optional cloud/MCP CLIs |
 | VS Code Dev Container | Local containerized validation path | VS Code, Dev Containers extension, Docker Desktop or compatible container engine |
 | Manual Linux setup | Direct local validation path | .NET 8 SDK, CMake, C++17 compiler, C11 compiler, Docker, SQLite, and GHDL |
 | Windows dashboard | Required path for the WPF operator dashboard GUI | Windows 10 or later, Git for Windows, .NET 8 SDK, optional Visual Studio 2022 or VS Code with C# Dev Kit |
+| Local setup preflight | Required Copilot-assisted check before local execution paths | Run `/01.00.install-required-tools-sdks-and-libraries` in VS Code to scan setup docs, manifests, and devcontainer alignment |
 
 ### Permissions And Licensing
 
@@ -96,6 +97,8 @@ policy, facilitators should confirm availability before the workshop.
 Users should first choose an environment path: Codespaces for the lowest-friction validation route, a local Dev Container
 for Docker-based local development, manual Linux setup for direct tool installation, or Windows for the WPF dashboard.
 Forking is recommended when users intend to save workshop changes, open pull requests, or adapt the simulator.
+For local execution paths, users should run `/01.00.install-required-tools-sdks-and-libraries` in VS Code before running
+the tutorial commands so tool, SDK, and devcontainer gaps are found early.
 
 ### Tutorial 1: Validate The Stack In Codespaces
 
@@ -262,7 +265,7 @@ flowchart LR
 | NFR-003 | Maintainability | Components shall keep simple workshop-friendly boundaries. | Separate C#, C++, C, SQL, PLC, FPGA folders | Implemented |
 | NFR-004 | Validation | Task list shall include passing validation coverage. | All Spec Kit tasks checked complete | Implemented |
 | NFR-005 | Confidentiality | Generated text and sample data shall avoid restricted identifiers. | Scan returns no blocked terms | Implemented |
-| NFR-006 | Reproducibility | Devcontainer shall include required validation tooling. | .NET 8, CMake, GHDL, SQLite, Docker | Implemented |
+| NFR-006 | Reproducibility | Devcontainer shall include required validation tooling. | .NET 8, CMake, C/C++ compilers, GHDL, SQLite, Docker, Node.js, GitHub CLI, Spec Kit | Implemented |
 | NFR-007 | Usability | Setup guidance shall identify prerequisites, permissions, environment paths, and Windows-only dashboard constraints. | README and PRD contain aligned setup guidance | Implemented |
 
 ## User Experience Requirements
@@ -327,15 +330,38 @@ messages and models lifecycle/state behavior closer to embedded or machine-contr
 
 ## Validation Summary
 
-The merged baseline was validated with:
+The merged baseline was validated with these command groups:
 
-- `dotnet test workspace/csharp/PatterningSimulator.sln --configuration Debug`
-- `cmake -S workspace/cpp -B workspace/cpp/build && cmake --build workspace/cpp/build && ctest --test-dir workspace/cpp/build --output-on-failure`
-- `cmake -S workspace/control-c -B workspace/control-c/build && cmake --build workspace/control-c/build && ctest --test-dir workspace/control-c/build --output-on-failure`
-- `bash workspace/sql/validate-sqlite-container.sh`
-- `ghdl -a workspace/fpga/signal_map.vhd workspace/fpga/signal_map_tb.vhd && ghdl -e signal_map_tb && ghdl -r signal_map_tb --stop-time=20ns`
-- `dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway plc --port 5120 --scenarios workspace/plc/scenarios/basic-run.json`
-- `dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway fpga --port 5130 --signal-map workspace/fpga/signal_map.vhd`
+```bash
+dotnet test workspace/csharp/PatterningSimulator.sln --configuration Debug
+```
+
+```bash
+cmake -S workspace/cpp -B workspace/cpp/build
+cmake --build workspace/cpp/build
+ctest --test-dir workspace/cpp/build --output-on-failure
+```
+
+```bash
+cmake -S workspace/control-c -B workspace/control-c/build
+cmake --build workspace/control-c/build
+ctest --test-dir workspace/control-c/build --output-on-failure
+```
+
+```bash
+bash workspace/sql/validate-sqlite-container.sh
+```
+
+```bash
+ghdl -a workspace/fpga/signal_map.vhd workspace/fpga/signal_map_tb.vhd
+ghdl -e signal_map_tb
+ghdl -r signal_map_tb --stop-time=20ns
+```
+
+```bash
+dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway plc --port 5120 --scenarios workspace/plc/scenarios/basic-run.json
+dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway fpga --port 5130 --signal-map workspace/fpga/signal_map.vhd
+```
 
 ## Rollout And Operations
 

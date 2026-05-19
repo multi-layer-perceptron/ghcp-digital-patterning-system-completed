@@ -33,11 +33,18 @@ and PLC-style artifacts.
 
 | Applies To | Requirement |
 | --- | --- |
-| Codespaces / Dev Container | No local build tools required beyond a browser or VS Code. The container installs .NET 8, CMake, GHDL, SQLite, Docker-in-Docker, Node.js, GitHub CLI, and Spec Kit. |
+| Codespaces / Dev Container | No local build tools required beyond a browser or VS Code. The container installs .NET 8, CMake, C/C++ compilers, GHDL, SQLite, Docker-in-Docker, Node.js, GitHub CLI, Spec Kit, PostgreSQL client tooling, and optional cloud/MCP CLIs. |
 | Local Linux validation | .NET 8 SDK, CMake, a C++17 compiler, a C11 compiler, Docker, SQLite, and GHDL. |
 | Windows dashboard | Windows 10 or later, .NET 8 SDK, Git for Windows, and optionally Visual Studio 2022 or VS Code with C# Dev Kit. |
 | SQL validation | Docker-capable host. The validation path uses a disposable SQLite container while preserving the SQL Server-compatible contract. |
 | Copilot / Spec Kit workshop flows | GitHub CLI, Spec Kit CLI, and a Copilot-enabled GitHub account. |
+
+### Local Setup Preflight
+
+When running locally, first open the repository in VS Code and run the custom Copilot prompt
+`/01.00.install-required-tools-sdks-and-libraries`. The prompt scans the README, PRD, devcontainer, quickstart, and
+project manifests for tool or SDK gaps, then aligns setup guidance and devcontainer configuration before you follow the
+tutorial commands.
 
 ### Permissions And Licensing
 
@@ -56,10 +63,10 @@ your administrator before the workshop. This repository is licensed under [MIT](
 
 | Path | Time | For | Recommendation |
 | --- | --- | --- | --- |
-| [Codespaces](#option-a--github-codespaces) | 5-10 min | No local install, easiest validation route | Start here |
-| [VS Code Dev Container](#option-b--vs-code-dev-container) | ~15 min | Local VS Code users with Docker Desktop or another container engine | Supported |
-| [Manual Linux Setup](#option-c--manual-linux-setup) | ~20 min | Users who prefer direct tool installation | Advanced |
-| [Windows Dashboard](#option-d--windows-dashboard) | ~10 min after clone | Running the WPF operator UI | Required for GUI |
+| [Codespaces](#option-a---github-codespaces) | 5-10 min | No local install, easiest validation route | Start here |
+| [VS Code Dev Container](#option-b---vs-code-dev-container) | ~15 min | Local VS Code users with Docker Desktop or another container engine | Supported |
+| [Manual Linux Setup](#option-c---manual-linux-setup) | ~20 min | Users who prefer direct tool installation | Advanced |
+| [Windows Dashboard](#option-d---windows-dashboard) | ~10 min after clone | Running the WPF operator UI | Required for GUI |
 
 ### Option A - GitHub Codespaces
 
@@ -77,17 +84,20 @@ the Windows WPF dashboard.
   container engine.
 2. Clone or fork the repository using [Fork And Clone](#fork-and-clone).
 3. Open the repository folder in VS Code.
-4. When prompted, select **Reopen in Container**. You can also run **Dev Containers: Reopen in Container** from the
+4. Run `/01.00.install-required-tools-sdks-and-libraries` in Copilot Chat to check local onboarding and devcontainer
+   alignment.
+5. When prompted, select **Reopen in Container**. You can also run **Dev Containers: Reopen in Container** from the
   Command Palette.
-5. Wait for the container to finish building, then continue with [Validate The Stack](#validate-the-stack).
+6. Wait for the container to finish building, then continue with [Validate The Stack](#validate-the-stack).
 
 ### Option C - Manual Linux Setup
 
 Before starting, install the local tools listed in [Additional Tools By Path](#additional-tools-by-path).
 
 1. Clone or fork the repository using [Fork And Clone](#fork-and-clone).
-2. Open a shell at the repository root.
-3. Run the commands in [Validate The Stack](#validate-the-stack).
+2. Open the repository in VS Code and run `/01.00.install-required-tools-sdks-and-libraries` in Copilot Chat.
+3. Open a shell at the repository root.
+4. Run the commands in [Validate The Stack](#validate-the-stack).
 
 ### Option D - Windows Dashboard
 
@@ -102,26 +112,27 @@ Windows clone instead of trying to launch the UI from Codespaces.
     Set-Location ghcp-digital-patterning-system-completed
     ```
 
-3. Confirm .NET 8 is available:
+3. Open the repository in VS Code and run `/01.00.install-required-tools-sdks-and-libraries` in Copilot Chat.
+4. Confirm .NET 8 is available:
 
     ```powershell
     dotnet --info
     ```
 
-4. Restore and build the solution:
+5. Restore and build the solution:
 
     ```powershell
     dotnet restore workspace/csharp/PatterningSimulator.sln
     dotnet build workspace/csharp/PatterningSimulator.sln --configuration Debug
     ```
 
-5. Optionally run the C# tests:
+6. Optionally run the C# tests:
 
     ```powershell
     dotnet test workspace/csharp/PatterningSimulator.sln --configuration Debug
     ```
 
-6. Launch the WPF dashboard:
+7. Launch the WPF dashboard:
 
     ```powershell
     dotnet run --project workspace/csharp/PatterningOperatorDashboard
