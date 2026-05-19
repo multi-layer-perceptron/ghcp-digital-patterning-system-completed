@@ -9,8 +9,9 @@ public static class DefaultChannelFactory
 
     public static IReadOnlyList<ManufacturingChannel> CreateDefaultChannels(Guid conceptId)
     {
+        _ = conceptId;
         return Enumerable.Range(0, 8)
-            .Select(index => new ManufacturingChannel(Guid.NewGuid(), conceptId, index + 1, $"Channel {index + 1}", DefaultHexColors[index], true))
+            .Select(index => new ManufacturingChannel($"channel-{index + 1}", $"Channel {index + 1}", DefaultHexColors[index], index + 1))
             .ToList();
     }
 }

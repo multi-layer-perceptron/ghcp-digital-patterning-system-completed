@@ -13,6 +13,6 @@ public sealed class ChannelMappingWorkflowTests
         var palette = new ColorPalette([new PaletteColor("p1", "#111111", "Black", 100, 10)], 100, "test");
         var channels = DefaultChannelFactory.CreateDefaultChannels(conceptId);
         var mappings = new ChannelMappingService().Map(palette, channels);
-        Assert.Equal(MappingStatus.Exact, mappings[0].MappingStatus);
+        Assert.Equal(MappingStatus.Exact, mappings[0].Status);
     }
 }

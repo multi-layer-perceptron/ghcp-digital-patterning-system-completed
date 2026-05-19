@@ -7,7 +7,7 @@ public sealed class ChannelMappingService
 {
     public IReadOnlyList<ChannelMapping> Map(ColorPalette palette, IReadOnlyList<ManufacturingChannel> channels)
     {
-        var activeChannels = channels.Where(channel => channel.IsEnabled).ToList();
+        var activeChannels = channels.ToList();
         if (activeChannels.Count == 0)
         {
             return palette.Colors.Select(color => CreateUnresolved(color, null)).ToList();
@@ -15,20 +15,20 @@ public sealed class ChannelMappingService
 
         return palette.Colors.Select(color =>
         {
-            var best = activeChannels.MinBy(channel => ColorDistance(color.HexColor, channel.HexColor));
+            var best = activeChannels.MinBy(channel => ColorDistance(color.Hex, channel.Hex));
             if (best is null)
             {
                 return CreateUnresolved(color, null);
             }
 
-            var delta = ColorDistance(color.HexColor, best.HexColor);
+            var delta = ColorDistance(color.Hex, best.Hex);
             var status = delta == 0 ? MappingStatus.Exact : delta <= 80 ? MappingStatus.Approximate : MappingStatus.Unresolved;
-            return new ChannelMapping(Guid.NewGuid(), color.Id, status == MappingStatus.Unresolved ? null : best.Id, status, delta, status == MappingStatus.Unresolved ? "No channel close enough for a stable mapping." : null);
+            return new ChannelMapping(color.Id, status == MappingStatus.Unresolved ? null : best.Id, status, (decimal)delta, status == MappingStatus.Unresolved ? "No channel close enough for a stable mapping." : null);
         }).ToList();
     }
 
     private static ChannelMapping CreateUnresolved(PaletteColor color, ManufacturingChannel? channel) =>
-        new(Guid.NewGuid(), color.Id, channel?.Id, MappingStatus.Unresolved, null, "No enabled channel is available.");
+        new(color.Id, channel?.Id, MappingStatus.Unresolved, 0m, "No enabled channel is available.");
 
     private static double ColorDistance(string leftHex, string rightHex)
     {

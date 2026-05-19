@@ -197,11 +197,11 @@
 - [X] T098 [P] Update SQL schema documentation in `workspace/sql/README.md`
 - [X] T099 [P] Update PLC validation documentation in `workspace/plc/README.md`
 - [X] T100 [P] Update FPGA validation documentation in `workspace/fpga/README.md`
-- [ ] T101 Run full C# validation commands from `specs/001-digital-patterning-simulator/quickstart.md`
-- [ ] T102 Run full C++ validation commands from `specs/001-digital-patterning-simulator/quickstart.md`
-- [ ] T103 Run full C control emulator validation commands from `specs/001-digital-patterning-simulator/quickstart.md`
-- [ ] T104 Run SQL schema validation commands from `specs/001-digital-patterning-simulator/quickstart.md`
-- [ ] T105 Run PLC and FPGA stub validation commands from `specs/001-digital-patterning-simulator/quickstart.md`
+- [X] T101 Run full C# validation commands from `specs/001-digital-patterning-simulator/quickstart.md`
+- [X] T102 Run full C++ validation commands from `specs/001-digital-patterning-simulator/quickstart.md`
+- [X] T103 Run full C control emulator validation commands from `specs/001-digital-patterning-simulator/quickstart.md`
+- [X] T104 Run SQL schema validation commands from `specs/001-digital-patterning-simulator/quickstart.md`
+- [X] T105 Run PLC and FPGA stub validation commands from `specs/001-digital-patterning-simulator/quickstart.md`
 - [X] T106 Run confidentiality term scan across `workspace/`, `docs/`, and `specs/001-digital-patterning-simulator/`
 - [X] T107 [P] Add C# upload analysis timing validation in `workspace/csharp/Patterning.Tests/AnalysisPerformanceTests.cs`
 - [X] T108 [P] Add C# simulation lifecycle latency validation in `workspace/csharp/Patterning.Tests/LifecycleLatencyTests.cs`

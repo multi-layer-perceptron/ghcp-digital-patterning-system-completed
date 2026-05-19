@@ -17,7 +17,7 @@ public sealed class HtmlReportExporter
         builder.AppendLine("<h2>Palette</h2><ul>");
         foreach (var color in report.Palette.Colors)
         {
-            builder.AppendLine($"<li>{WebUtility.HtmlEncode(color.Label)} {WebUtility.HtmlEncode(color.HexColor)}</li>");
+            builder.AppendLine($"<li>{WebUtility.HtmlEncode(color.Label)} {WebUtility.HtmlEncode(color.Hex)}</li>");
         }
         builder.AppendLine("</ul><h2>Diagnostics</h2><ul>");
         foreach (var diagnostic in report.Diagnostics)

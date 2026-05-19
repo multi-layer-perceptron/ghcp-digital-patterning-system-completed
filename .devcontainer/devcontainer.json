@@ -37,8 +37,11 @@
         "ghcr.io/devcontainers/features/node:1": {
             "version": "lts"
         },
+        "ghcr.io/devcontainers/features/dotnet:2": {
+            "version": "8.0"
+        },
         "ghcr.io/devcontainers-extra/features/apt-get-packages:1": {
-            "packages": "postgresql-client,jq,less"
+            "packages": "postgresql-client,jq,less,cmake,ghdl,sqlite3"
         },
         "ghcr.io/devcontainers/features/sshd:1": {
             "version": "latest"

@@ -9,8 +9,8 @@ public sealed class MappedPreviewRenderer
     {
         return mappings.Select(mapping =>
         {
-            var channel = mapping.ChannelId.HasValue ? channels.FirstOrDefault(item => item.Id == mapping.ChannelId.Value) : null;
-            return channel?.HexColor ?? "#999999";
+            var channel = mapping.ChannelId is not null ? channels.FirstOrDefault(item => item.Id == mapping.ChannelId) : null;
+            return channel?.Hex ?? "#999999";
         }).ToList();
     }
 }

@@ -22,6 +22,6 @@ public sealed class ManufacturingChannelService
         {
             throw new ArgumentException("Channel color must be a 6-digit hex color.", nameof(hexColor));
         }
-        return channel with { HexColor = hexColor.ToUpperInvariant() };
+        return channel with { Hex = hexColor.ToUpperInvariant() };
     }
 }

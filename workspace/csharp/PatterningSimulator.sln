@@ -1,16 +1,46 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatterningOperatorDashboard", "PatterningOperatorDashboard\PatterningOperatorDashboard.csproj", "{0C5B75A1-9B38-4C8B-9DF6-5D41C9383C01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patterning.Core", "Patterning.Core\Patterning.Core.csproj", "{091163D8-0852-40D3-B601-8ABD8CB79AF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patterning.Core", "Patterning.Core\Patterning.Core.csproj", "{BEA19E9B-87B3-4767-A21A-A14DBB092C01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patterning.Infrastructure", "Patterning.Infrastructure\Patterning.Infrastructure.csproj", "{BCA2E7E4-F1CA-4C3C-9628-0676A1DB8D5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patterning.Infrastructure", "Patterning.Infrastructure\Patterning.Infrastructure.csproj", "{6E2910CA-3F50-4B37-A9C2-B90CE0D9B401}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatterningOperatorDashboard", "PatterningOperatorDashboard\PatterningOperatorDashboard.csproj", "{98321AE9-F811-4238-A6B5-8328E4982105}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patterning.Tests", "Patterning.Tests\Patterning.Tests.csproj", "{D3BEB987-FB56-4B2E-8505-0CB706087501}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patterning.GatewayHost", "Patterning.GatewayHost\Patterning.GatewayHost.csproj", "{7200FA45-0A45-481D-84DF-5B60641641B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patterning.GatewayHost", "Patterning.GatewayHost\Patterning.GatewayHost.csproj", "{A71F5455-111C-4594-806F-E7FA61C60801}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patterning.Tests", "Patterning.Tests\Patterning.Tests.csproj", "{E75BBF2A-706A-495B-AC5E-DD624E6C4C58}"
 EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{091163D8-0852-40D3-B601-8ABD8CB79AF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{091163D8-0852-40D3-B601-8ABD8CB79AF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{091163D8-0852-40D3-B601-8ABD8CB79AF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{091163D8-0852-40D3-B601-8ABD8CB79AF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCA2E7E4-F1CA-4C3C-9628-0676A1DB8D5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCA2E7E4-F1CA-4C3C-9628-0676A1DB8D5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCA2E7E4-F1CA-4C3C-9628-0676A1DB8D5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCA2E7E4-F1CA-4C3C-9628-0676A1DB8D5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98321AE9-F811-4238-A6B5-8328E4982105}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98321AE9-F811-4238-A6B5-8328E4982105}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98321AE9-F811-4238-A6B5-8328E4982105}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98321AE9-F811-4238-A6B5-8328E4982105}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7200FA45-0A45-481D-84DF-5B60641641B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7200FA45-0A45-481D-84DF-5B60641641B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7200FA45-0A45-481D-84DF-5B60641641B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7200FA45-0A45-481D-84DF-5B60641641B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E75BBF2A-706A-495B-AC5E-DD624E6C4C58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E75BBF2A-706A-495B-AC5E-DD624E6C4C58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E75BBF2A-706A-495B-AC5E-DD624E6C4C58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E75BBF2A-706A-495B-AC5E-DD624E6C4C58}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 EndGlobal

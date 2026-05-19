@@ -8,6 +8,7 @@ public sealed class JsonReportExporter
 {
     public string Export(ConceptReport report)
     {
+        ArgumentNullException.ThrowIfNull(report);
         return JsonSerializer.Serialize(report, new JsonSerializerOptions(JsonSerializerDefaults.Web) { WriteIndented = true });
     }
 }

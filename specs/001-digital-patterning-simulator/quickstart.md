@@ -8,7 +8,7 @@ Recommended developer environment:
 
 - Windows for the C# operator dashboard and PLC engineering tools.
 - Linux or Windows for C++ pattern processing and C control emulator builds.
-- SQL Server Developer Edition or a local SQL Server container for run-history validation.
+- SQLite in a Docker container for portable run-history schema validation.
 - Optional GHDL, ModelSim, or Vivado Simulator for FPGA stub validation.
 - Optional CODESYS or TwinCAT for PLC Structured Text validation.
 
@@ -42,14 +42,13 @@ ctest --test-dir workspace/control-c/build --output-on-failure
 
 Expected result: TCP/IP command parser, lifecycle command handling, channel activation, pause/resume/reset, and status response tests pass.
 
-## 5. Apply SQL Schema
+## 5. Validate SQL Schema With SQLite Container
 
 ```bash
-sqlcmd -S localhost -d PatterningSimulator -E -i specs/001-digital-patterning-simulator/contracts/sql-schema.sql
-sqlcmd -S localhost -d PatterningSimulator -E -Q "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_NAME"
+bash workspace/sql/validate-sqlite-container.sh
 ```
 
-Expected result: design concepts, palette, channels, mappings, production grids, diagnostics, simulation runs, and simulation events tables are present.
+Expected result: the SQLite container creates design concepts, palette, channels, mappings, production grids, diagnostics, simulation runs, and simulation events tables, then reports the expected table count.
 
 ## 6. Start Local TCP/IP Services
 
