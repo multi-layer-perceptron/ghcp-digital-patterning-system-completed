@@ -124,7 +124,9 @@ Dev Container. For the WPF dashboard GUI, continue with [Windows Dashboard](#opt
 
 5. Clone or fork the repository using [Fork And Clone](#fork-and-clone).
 6. Open the repository in VS Code and run `/01.00.install-required-tools-sdks-and-libraries` in Copilot Chat.
-7. Run the supported commands in [Validate The Stack](#validate-the-stack).
+7. Run **Terminal: Run Task** > **Native: Test C++ And C** for native validation, or use the Windows command examples in
+  [Validate The Stack](#validate-the-stack). The committed VS Code tasks use short build directories under `C:/temp` to
+  avoid MSBuild file-tracking failures from long OneDrive workspace paths.
 
 ### Option E - Windows Dashboard
 
@@ -213,6 +215,8 @@ checks.
 
 ### C++ Pattern Processor
 
+Use the default commands in Codespaces, the Dev Container, and typical Linux/macOS shells:
+
 ```bash
 # Configure CMake with -S pointing to the source directory and -B pointing to the build directory.
 cmake -S workspace/cpp -B workspace/cpp/build
@@ -224,9 +228,21 @@ cmake --build workspace/cpp/build
 ctest --test-dir workspace/cpp/build --output-on-failure
 ```
 
+On local Windows clones under a long OneDrive or synced-folder path, Visual Studio/MSBuild can fail during CMake compiler
+detection with `FTK1011` file-tracking errors in generated `.tlog` files. In that case, use the committed VS Code task
+**Native: Test C++ And C** or run the C++ workflow with a short external build directory:
+
+```powershell
+cmake -S workspace/cpp -B C:/temp/ghcp-digital-patterning-system-completed/cpp-build
+cmake --build C:/temp/ghcp-digital-patterning-system-completed/cpp-build --config Debug
+ctest --test-dir C:/temp/ghcp-digital-patterning-system-completed/cpp-build -C Debug --output-on-failure
+```
+
 Expected result: image metadata, palette extraction, channel mapping, grid conversion, and command-generation tests pass.
 
 ### C Control Emulator
+
+Use the default commands in Codespaces, the Dev Container, and typical Linux/macOS shells:
 
 ```bash
 # Configure CMake with -S pointing to the source directory and -B pointing to the build directory.
@@ -237,6 +253,15 @@ cmake --build workspace/control-c/build
 
 # Run the CTest suite from the build directory and print failure details if any test fails.
 ctest --test-dir workspace/control-c/build --output-on-failure
+```
+
+For local Windows validation from a long synced path, use the committed VS Code task **Native: Test C++ And C** or a short
+external build directory:
+
+```powershell
+cmake -S workspace/control-c -B C:/temp/ghcp-digital-patterning-system-completed/control-c-build
+cmake --build C:/temp/ghcp-digital-patterning-system-completed/control-c-build --config Debug
+ctest --test-dir C:/temp/ghcp-digital-patterning-system-completed/control-c-build -C Debug --output-on-failure
 ```
 
 Expected result: the C lifecycle and protocol helper test passes.
