@@ -1,0 +1,159 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "CMake: Configure C++ Pattern Processor",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S",
+                "${workspaceFolder}/workspace/cpp",
+                "-B",
+                "${workspaceFolder}/workspace/cpp/build"
+            ],
+            "windows": {
+                "args": [
+                    "-S",
+                    "${workspaceFolder}/workspace/cpp",
+                    "-B",
+                    "C:/temp/${workspaceFolderBasename}/cpp-build"
+                ]
+            },
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "CMake: Build C++ Pattern Processor",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "${workspaceFolder}/workspace/cpp/build",
+                "--config",
+                "Debug"
+            ],
+            "windows": {
+                "args": [
+                    "--build",
+                    "C:/temp/${workspaceFolderBasename}/cpp-build",
+                    "--config",
+                    "Debug"
+                ]
+            },
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": "CMake: Configure C++ Pattern Processor"
+        },
+        {
+            "label": "CTest: Run C++ Pattern Processor Tests",
+            "type": "shell",
+            "command": "ctest",
+            "args": [
+                "--test-dir",
+                "${workspaceFolder}/workspace/cpp/build",
+                "-C",
+                "Debug",
+                "--output-on-failure"
+            ],
+            "windows": {
+                "args": [
+                    "--test-dir",
+                    "C:/temp/${workspaceFolderBasename}/cpp-build",
+                    "-C",
+                    "Debug",
+                    "--output-on-failure"
+                ]
+            },
+            "problemMatcher": [],
+            "dependsOn": "CMake: Build C++ Pattern Processor"
+        },
+        {
+            "label": "CMake: Configure C Control Emulator",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S",
+                "${workspaceFolder}/workspace/control-c",
+                "-B",
+                "${workspaceFolder}/workspace/control-c/build"
+            ],
+            "windows": {
+                "args": [
+                    "-S",
+                    "${workspaceFolder}/workspace/control-c",
+                    "-B",
+                    "C:/temp/${workspaceFolderBasename}/control-c-build"
+                ]
+            },
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "CMake: Build C Control Emulator",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "${workspaceFolder}/workspace/control-c/build",
+                "--config",
+                "Debug"
+            ],
+            "windows": {
+                "args": [
+                    "--build",
+                    "C:/temp/${workspaceFolderBasename}/control-c-build",
+                    "--config",
+                    "Debug"
+                ]
+            },
+            "problemMatcher": "$msCompile",
+            "dependsOn": "CMake: Configure C Control Emulator"
+        },
+        {
+            "label": "CTest: Run C Control Emulator Tests",
+            "type": "shell",
+            "command": "ctest",
+            "args": [
+                "--test-dir",
+                "${workspaceFolder}/workspace/control-c/build",
+                "-C",
+                "Debug",
+                "--output-on-failure"
+            ],
+            "windows": {
+                "args": [
+                    "--test-dir",
+                    "C:/temp/${workspaceFolderBasename}/control-c-build",
+                    "-C",
+                    "Debug",
+                    "--output-on-failure"
+                ]
+            },
+            "problemMatcher": [],
+            "dependsOn": "CMake: Build C Control Emulator"
+        },
+        {
+            "label": "Native: Build C++ And C",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "CMake: Build C++ Pattern Processor",
+                "CMake: Build C Control Emulator"
+            ],
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "label": "Native: Test C++ And C",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "CTest: Run C++ Pattern Processor Tests",
+                "CTest: Run C Control Emulator Tests"
+            ],
+            "problemMatcher": [],
+            "group": "test"
+        }
+    ]
+}

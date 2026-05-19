@@ -40,7 +40,8 @@ workspace/node_modules/
 Thumbs.db
 *.tmp
 *.swp
-.vscode/
+.vscode/*
+!.vscode/tasks.json
 .idea/
 
 # Python build outputs
