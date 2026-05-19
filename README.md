@@ -176,8 +176,13 @@ checks.
 ### C++ Pattern Processor
 
 ```bash
+# Configure CMake with -S pointing to the source directory and -B pointing to the build directory.
 cmake -S workspace/cpp -B workspace/cpp/build
+
+# Compile the pattern processor and its test binaries using the generated build files.
 cmake --build workspace/cpp/build
+
+# Run the CTest suite from the build directory and print failure details if any test fails.
 ctest --test-dir workspace/cpp/build --output-on-failure
 ```
 
@@ -186,8 +191,13 @@ Expected result: image metadata, palette extraction, channel mapping, grid conve
 ### C Control Emulator
 
 ```bash
+# Configure CMake with -S pointing to the source directory and -B pointing to the build directory.
 cmake -S workspace/control-c -B workspace/control-c/build
+
+# Compile the control emulator and its test binary using the generated build files.
 cmake --build workspace/control-c/build
+
+# Run the CTest suite from the build directory and print failure details if any test fails.
 ctest --test-dir workspace/control-c/build --output-on-failure
 ```
 
