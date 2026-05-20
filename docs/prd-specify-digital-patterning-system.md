@@ -237,6 +237,56 @@ flowchart LR
     Report --> Html[Printable HTML report]
 ```
 
+## Operator Dashboard Workflow
+
+The WPF operator dashboard is the primary user-facing surface. It exposes the same pipeline as the data flow above
+through four sequential tabs. Each tab consumes the state produced by the previous one through a shared
+`SessionState` singleton, so the tabs must be used in order.
+
+```mermaid
+flowchart LR
+    Start([Launch dashboard]) --> Upload[Tab 1: Upload Design]
+    Upload -->|DesignConcept,<br/>ImageMetadata,<br/>ColorPalette| Channels[Tab 2: Channel Mapping]
+    Channels -->|ChannelMapping list,<br/>ProductionGridModel| Simulation[Tab 3: Simulation]
+    Channels -.->|blocking<br/>ManufacturabilityDiagnostic| Blocked[Blocked state]
+    Blocked -.-> Channels
+    Simulation -->|SimulationRun| Reports[Tab 4: Reports]
+    Reports --> Json[(JSON ConceptReport)]
+    Reports --> Html[(Printable HTML ConceptReport)]
+```
+
+| Tab | Inputs From SessionState | Operator Action | Outputs Published To SessionState |
+| --- | --- | --- | --- |
+| Upload Design | (none) | Browse to a PNG/JPEG or load the bundled sample. | `DesignConcept`, `ImageMetadata`, `ColorPalette` |
+| Channel Mapping | `ColorPalette` | Assign each palette color to one of eight editable manufacturing channels; review diagnostics. | `ChannelMapping[]`, `ProductionGridModel` |
+| Simulation | `ProductionGridModel`, mappings, diagnostics | Choose grid size; run start, pause, resume, reset. Blocked state if a blocking diagnostic exists. | `SimulationRun` |
+| Reports | All of the above | Generate the report; export JSON or printable HTML. | `ConceptReport` (in-memory) + on-disk export |
+
+## Glossary
+
+These terms appear in the dashboard, code, contracts, and reports. They are deliberately generic so workshop participants
+who are new to industrial patterning systems can map them onto whatever physical machine their scenario assumes (digital
+printer, tufter, weaver, dye applicator, etc.).
+
+| Term | Meaning |
+| --- | --- |
+| Design concept | The uploaded image plus its metadata and palette - the object the pipeline operates on. |
+| Image metadata | Width, height, color space, and bit depth extracted from the uploaded image. |
+| Color palette | The representative colors found in the design, each with a coverage percentage. |
+| Palette color | One swatch in the palette - the *requested* color. |
+| Manufacturing channel | One of eight generic output slots on the simulated machine (yarn color, dye, ink head, fiber blend, or any other material feed). Channels model machine capability and are editable. |
+| Channel mapping | The assignment of a palette color to a channel, with status (Exact, Approximate, Unresolved) and a delta. |
+| Delta | Numeric color distance between a palette color and the channel chosen to reproduce it; lower is better. |
+| Manufacturability diagnostic | A warning or blocking error about the current mapping set. Blocking diagnostics prevent simulation start. |
+| Production grid | The design re-expressed as a grid of channel IDs at 64, 128, or 256 cells per side. |
+| Channel switch | A transition between adjacent grid cells that use different channels; counted as a real-world cost in the report. |
+| Simulation run | One lifecycle execution recording pass-by-pass commands, channel switches, elapsed simulated time, and the final state. |
+| Concept report | The bundle of concept, palette, mappings, grid summary, simulation summary, and diagnostics exported as JSON or HTML. |
+| Gateway | A stub TCP/IP service representing a PLC controller or FPGA timing module. |
+| PLC | Programmable Logic Controller - the lifecycle/state layer, modeled by the C control emulator and a Structured Text stub. |
+| FPGA | Field-Programmable Gate Array - the deterministic signal-routing layer, modeled by the VHDL `signal_map` and its GHDL testbench. |
+| Lifecycle state | The simulator's high-level run state: `Idle`, `Running`, `Paused`, `Completed`, `Blocked`, `Reset`. |
+
 ## Functional Requirements
 
 | ID | Requirement | Priority | Status |

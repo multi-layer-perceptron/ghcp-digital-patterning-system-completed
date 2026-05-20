@@ -340,6 +340,123 @@ dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway fpga -
 
 Expected result: GHDL stops at 20 ns, and both gateway commands print a `status.update:*:ready` response.
 
+## Operator Dashboard Tutorial
+
+The WPF operator dashboard is the workshop's main hands-on surface. It walks an operator through the same pipeline the
+validation commands exercise: take a design, decide how the machine will reproduce it, simulate a run, and export a
+report. The shell is organized as four tabs that must be used in order, because each tab consumes state produced by the
+previous one.
+
+### Dashboard Workflow Diagram
+
+```mermaid
+flowchart LR
+    Start([Launch dashboard]) --> Upload[Tab 1: Upload Design]
+    Upload -->|publishes Concept,<br/>ImageMetadata, Palette| Channels[Tab 2: Channel Mapping]
+    Channels -->|publishes ChannelMappings,<br/>ProductionGrid| Simulation[Tab 3: Simulation]
+    Simulation -->|publishes SimulationRun| Reports[Tab 4: Reports]
+    Reports --> Json[(JSON report)]
+    Reports --> Html[(Printable HTML report)]
+    Channels -.->|blocking diagnostic| Blocked[Run blocked:<br/>fix mappings]
+    Blocked -.-> Channels
+```
+
+Each tab reads from and writes to a shared in-memory `SessionState` singleton. Moving forward without completing the
+previous tab will show empty summaries; that is intentional so workshop participants can see exactly which step produces
+which artifact.
+
+### Tab 1 - Upload Design
+
+Purpose: bring a design image into the simulator and turn it into a `DesignConcept` with extracted metadata and a color
+palette.
+
+How to use it:
+
+1. Click **Browse** to pick a PNG or JPEG from disk (up to 10 MB, 4096 x 4096 px), or click **Load Sample** to use the
+   bundled generic floorcovering sample.
+2. Watch the summary panel populate with the file name, dimensions, color space, and the extracted palette swatches.
+3. If validation fails (unsupported format, oversize, unreadable), a red status message explains why; fix the input and
+   try again.
+
+What the tab produces: a `DesignConcept`, an `ImageMetadata` record (dimensions, color space, bit depth), and a
+`ColorPalette` (list of `PaletteColor` swatches with coverage percentages). All three are pushed to `SessionState`.
+
+### Tab 2 - Channel Mapping
+
+Purpose: tell the simulated machine **how** to reproduce each color in the design by assigning every palette color to one
+of the eight generic manufacturing channels.
+
+How to use it:
+
+1. Review the palette swatches on the left and the eight channel slots on the right.
+2. For each palette color, pick a channel from the dropdown. The **Delta** column shows the color distance between the
+   palette color and the channel; smaller is better.
+3. Optionally rename a channel or change its reference hex to match the materials your scenario assumes (yarn color,
+   ink, dye, fiber blend, etc.).
+4. Click **Apply Mappings**. The diagnostics panel will list any issues - unmapped colors, mappings with a delta above
+   the threshold, duplicates, or other manufacturability problems.
+5. If a diagnostic is marked **Blocking**, you cannot start a simulation until you fix it. Re-map and click **Apply
+   Mappings** again.
+
+What the tab produces: a list of `ChannelMapping` records and a `ProductionGridModel` (the design re-expressed as a grid
+of channel IDs at the chosen resolution).
+
+### Tab 3 - Simulation
+
+Purpose: run the production grid through the simulated lifecycle (start, pause, resume, reset) and watch the gateway
+stubs respond.
+
+How to use it:
+
+1. Choose a grid size (64, 128, or 256) - higher resolution means more cells and more channel switches.
+2. Click **Start** to begin the run. The status indicator moves through `Running` and finishes at `Completed`. If a
+   blocking diagnostic exists, the status moves to `Blocked` and the run never starts - return to the Channel Mapping
+   tab and fix the issue.
+3. Use **Pause** and **Resume** to verify the lifecycle handshake; use **Reset** to return to a fresh state.
+4. Optional: start the PLC or FPGA gateway stub in a separate terminal (see [Useful Commands](#useful-commands)) to see
+   the dashboard exchange `status.update` and timing messages over TCP/IP.
+
+What the tab produces: a `SimulationRun` record with pass-by-pass command counts, channel switch counts, elapsed
+simulated time, and the final lifecycle state. This is the artifact the Reports tab summarizes.
+
+### Tab 4 - Reports
+
+Purpose: assemble a `ConceptReport` from everything the previous tabs produced and export it for review.
+
+How to use it:
+
+1. Click **Generate** to build (or rebuild) the report from current `SessionState`. The summary panel shows concept,
+   palette, channels, grid, simulation, and diagnostics sections.
+2. Click **Export JSON** to save a structured report suitable for downstream tooling, or **Export HTML** for a
+   printable, human-readable version.
+3. The last export path is shown at the bottom of the tab so you can find the file quickly.
+
+What the tab produces: a JSON or HTML file on disk; the in-memory `ConceptReport` is not persisted automatically.
+
+### Glossary For Workshop Participants
+
+These terms appear throughout the dashboard, the code, and the PRD. They are deliberately generic because the simulator
+is not tied to any specific machine vendor or material.
+
+| Term | Plain-language meaning |
+| --- | --- |
+| **Design concept** | The uploaded image plus its metadata and palette - the "what to print" object the pipeline operates on. |
+| **Image metadata** | Width, height, color space, and bit depth extracted from the uploaded image. |
+| **Color palette** | The handful of representative colors found in the design, each with a coverage percentage. The simulator does not print pixel-perfect; it reduces the design to a palette and reproduces it through channels. |
+| **Palette color** | One swatch in the palette - the design's *requested* color. |
+| **Manufacturing channel** | One of eight generic output slots on the simulated machine - a yarn color, dye, ink head, fiber blend, or any other physical material feed. Channels model machine capability; they are editable (label + reference hex) so participants can pretend the machine is a tufter, a digital printer, a weaving loom, etc. |
+| **Channel mapping** | The decision "render palette color X using channel Y." Stored as a `ChannelMapping` with a status (Exact / Approximate / Unresolved) and a numeric **delta** representing color distance. |
+| **Delta** | A numeric score for how far a chosen channel is from the palette color it represents. Lower is better; large deltas usually trigger a diagnostic. |
+| **Manufacturability diagnostic** | A warning or blocking error about the current mapping set - for example, "palette color #4 is unmapped" or "delta above threshold for channel 2." Blocking diagnostics stop the simulation from starting. |
+| **Production grid** | The design re-expressed as a grid of channel IDs at 64, 128, or 256 cells per side. It is what the simulated machine actually consumes. |
+| **Channel switch** | A point in the production grid where two adjacent cells use different channels. The machine has to "swap material," which is a real-world cost; the report counts these. |
+| **Simulation run** | One execution of the lifecycle (start, pause, resume, reset). It records pass-by-pass commands, channel switches, elapsed simulated time, and the final state (Completed, Blocked, Reset). |
+| **Concept report** | The bundle of concept, palette, mappings, grid summary, simulation summary, and diagnostics that the Reports tab exports as JSON or HTML. |
+| **Gateway** | A stub TCP/IP service that pretends to be a PLC controller or FPGA timing module. The dashboard can talk to it over `status.update`/timing messages to demonstrate the protocol boundary. |
+| **PLC (Programmable Logic Controller)** | An industrial computer that runs lifecycle/state logic (start/pause/resume/reset). Modeled here by the C control emulator and a Structured Text stub. |
+| **FPGA (Field-Programmable Gate Array)** | A configurable chip used for fast, deterministic signal routing. Modeled here by the VHDL `signal_map` and its GHDL testbench. |
+| **Lifecycle state** | The simulator's high-level run state: `Idle`, `Running`, `Paused`, `Completed`, `Blocked`, `Reset`. |
+
 ## Useful Commands
 
 | Task | Command |
