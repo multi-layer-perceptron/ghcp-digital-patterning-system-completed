@@ -245,10 +245,11 @@ public partial class UploadDesignView : UserControl
     {
         var colors = new List<PaletteColor>
         {
-            new("p1", "#1F4E79", "Color 1", 40m, 102),
-            new("p2", "#E8E2D5", "Color 2", 30m, 77),
-            new("p3", "#A8443A", "Color 3", 20m, 51),
-            new("p4", "#3C7A4E", "Color 4", 10m, 26)
+            new("p1", "#2C6F91", "Color 1", 20m, 51),
+            new("p2", "#B9573F", "Color 2", 20m, 51),
+            new("p3", "#D2A13D", "Color 3", 20m, 51),
+            new("p4", "#7B8F45", "Color 4", 20m, 51),
+            new("p5", "#3E4F63", "Color 5", 20m, 52)
         };
         return new ColorPalette(colors, 100m, "sample-manifest");
     }

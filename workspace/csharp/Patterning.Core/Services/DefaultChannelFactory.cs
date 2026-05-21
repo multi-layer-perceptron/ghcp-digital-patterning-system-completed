@@ -5,7 +5,7 @@ namespace Patterning.Core.Services;
 /// <summary>Creates the eight editable generic manufacturing channels.</summary>
 public static class DefaultChannelFactory
 {
-    private static readonly string[] DefaultHexColors = ["#111111", "#E53935", "#1E88E5", "#43A047", "#FDD835", "#8E24AA", "#00ACC1", "#F4511E"];
+    private static readonly string[] DefaultHexColors = ["#2C6F91", "#B9573F", "#D2A13D", "#7B8F45", "#3E4F63", "#2C6F91", "#B9573F", "#D2A13D"];
 
     public static IReadOnlyList<ManufacturingChannel> CreateDefaultChannels(Guid conceptId)
     {

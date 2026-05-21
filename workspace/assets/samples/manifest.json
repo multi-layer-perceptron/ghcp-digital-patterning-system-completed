@@ -6,6 +6,42 @@
       "image": "generic-floorcovering-sample.png",
       "metadata": "generic-floorcovering-sample.json",
       "confidentiality": "synthetic"
+    },
+    {
+      "id": "01-floorcovering-sample",
+      "name": "Oak Hardwood Planks Sample",
+      "image": "01-floorcovering-sample.png",
+      "confidentiality": "synthetic"
+    },
+    {
+      "id": "02-floorcovering-sample",
+      "name": "Ceramic Tile Checkerboard Sample",
+      "image": "02-floorcovering-sample.png",
+      "confidentiality": "synthetic"
+    },
+    {
+      "id": "03-floorcovering-sample",
+      "name": "Herringbone Carpet Weave Sample",
+      "image": "03-floorcovering-sample.png",
+      "confidentiality": "synthetic"
+    },
+    {
+      "id": "sample-pattern-chevron",
+      "name": "Sample Pattern Chevron",
+      "image": "sample-pattern-chevron.png",
+      "confidentiality": "synthetic"
+    },
+    {
+      "id": "sample-pattern-channel-grid",
+      "name": "Sample Pattern Channel Grid",
+      "image": "sample-pattern-channel-grid.png",
+      "confidentiality": "synthetic"
+    },
+    {
+      "id": "sample-pattern-registration-stripes",
+      "name": "Sample Pattern Registration Stripes",
+      "image": "sample-pattern-registration-stripes.png",
+      "confidentiality": "synthetic"
     }
   ]
 }

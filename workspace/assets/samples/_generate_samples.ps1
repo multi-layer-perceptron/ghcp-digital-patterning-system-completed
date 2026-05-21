@@ -1,18 +1,24 @@
-# Generates three realistic floor covering sample PNGs into the current directory.
-# 01: oak hardwood planks
-# 02: ceramic tile checkerboard with grout
-# 03: herringbone berber carpet weave
+# Generates deterministic PNG samples using the same five swatch colors as the default manufacturing channels.
 
 Add-Type -AssemblyName System.Drawing
 
 $outDir = $PSScriptRoot
 $W = 512
 $H = 512
+$patternW = 480
+$patternH = 320
+
+$swatches = @(
+    [System.Drawing.Color]::FromArgb(0x2C, 0x6F, 0x91),
+    [System.Drawing.Color]::FromArgb(0xB9, 0x57, 0x3F),
+    [System.Drawing.Color]::FromArgb(0xD2, 0xA1, 0x3D),
+    [System.Drawing.Color]::FromArgb(0x7B, 0x8F, 0x45),
+    [System.Drawing.Color]::FromArgb(0x3E, 0x4F, 0x63)
+)
 
 function New-Bitmap {
     param([int]$Width, [int]$Height)
-    $bmp = New-Object System.Drawing.Bitmap($Width, $Height, [System.Drawing.Imaging.PixelFormat]::Format24bppRgb)
-    return $bmp
+    New-Object System.Drawing.Bitmap($Width, $Height, [System.Drawing.Imaging.PixelFormat]::Format24bppRgb)
 }
 
 function Save-Png {
@@ -22,100 +28,109 @@ function Save-Png {
     Write-Host "Wrote $Path"
 }
 
-function Clamp([int]$v) { if ($v -lt 0) { 0 } elseif ($v -gt 255) { 255 } else { $v } }
-
-$rand = [System.Random]::new(20260519)
-
-# ---------- 01: Oak hardwood planks ----------
-$bmp1 = New-Bitmap -Width $W -Height $H
-$plankH = 64
-$baseR = 165; $baseG = 116; $baseB = 70
-for ($y = 0; $y -lt $H; $y++) {
-    $plankIdx = [Math]::Floor($y / $plankH)
-    $offset = ($plankIdx * 53) % 80  # horizontal stagger feel via tone variation
-    for ($x = 0; $x -lt $W; $x++) {
-        # base wood tone with horizontal grain streaks
-        $grain = [Math]::Sin(($x * 0.05) + ($plankIdx * 1.7)) * 12
-        $streak = [Math]::Sin(($x * 0.6) + ($y * 0.08) + $plankIdx) * 6
-        $noise = $rand.Next(-8, 9)
-        $r = Clamp([int]($baseR + $grain + $streak + $noise - ($offset * 0.3)))
-        $g = Clamp([int]($baseG + $grain * 0.7 + $streak * 0.6 + $noise - ($offset * 0.25)))
-        $b = Clamp([int]($baseB + $grain * 0.4 + $streak * 0.3 + $noise - ($offset * 0.2)))
-        # plank seam: dark line every $plankH rows
-        if (($y % $plankH) -eq 0 -or ($y % $plankH) -eq ($plankH - 1)) {
-            $r = [int]($r * 0.35); $g = [int]($g * 0.30); $b = [int]($b * 0.25)
-        }
-        $bmp1.SetPixel($x, $y, [System.Drawing.Color]::FromArgb($r, $g, $b))
-    }
+function Fill-Rect {
+    param($Graphics, [System.Drawing.Color]$Color, [int]$X, [int]$Y, [int]$Width, [int]$Height)
+    $brush = [System.Drawing.SolidBrush]::new($Color)
+    $Graphics.FillRectangle($brush, $X, $Y, $Width, $Height)
+    $brush.Dispose()
 }
-Save-Png -Bitmap $bmp1 -Path (Join-Path $outDir '01-floorcovering-sample.png')
 
-# ---------- 02: Ceramic tile checkerboard with grout ----------
-$bmp2 = New-Bitmap -Width $W -Height $H
-$tile = 128
-$grout = 6
-$colorA = @{ R = 232; G = 226; B = 213 } # cream
-$colorB = @{ R = 60;  G = 78;  B = 96 }  # slate blue
-$groutCol = @{ R = 80; G = 80; B = 78 }
-for ($y = 0; $y -lt $H; $y++) {
-    for ($x = 0; $x -lt $W; $x++) {
-        $tx = [Math]::Floor($x / $tile)
-        $ty = [Math]::Floor($y / $tile)
-        $isGrout = (($x % $tile) -lt $grout) -or (($y % $tile) -lt $grout)
-        if ($isGrout) {
-            $n = $rand.Next(-6, 7)
-            $r = Clamp($groutCol.R + $n); $g = Clamp($groutCol.G + $n); $b = Clamp($groutCol.B + $n)
+function New-PlankSample {
+    $bitmap = New-Bitmap -Width $W -Height $H
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    $graphics.Clear($swatches[4])
+    for ($row = 0; $row -lt 8; $row++) {
+        $y = $row * 64
+        for ($col = -1; $col -lt 5; $col++) {
+            $x = ($col * 128) + (($row % 2) * 64)
+            Fill-Rect $graphics $swatches[($row + $col + 5) % $swatches.Count] $x $y 126 62
         }
-        else {
-            if ((($tx + $ty) % 2) -eq 0) { $c = $colorA } else { $c = $colorB }
-            # subtle marbling
-            $m = [Math]::Sin(($x * 0.07) + ($y * 0.05)) * 10
-            $n = $rand.Next(-5, 6)
-            $r = Clamp([int]($c.R + $m + $n))
-            $g = Clamp([int]($c.G + $m + $n))
-            $b = Clamp([int]($c.B + $m + $n))
-        }
-        $bmp2.SetPixel($x, $y, [System.Drawing.Color]::FromArgb($r, $g, $b))
+        Fill-Rect $graphics $swatches[4] 0 $y $W 2
     }
+    $graphics.Dispose()
+    Save-Png -Bitmap $bitmap -Path (Join-Path $outDir '01-floorcovering-sample.png')
 }
-Save-Png -Bitmap $bmp2 -Path (Join-Path $outDir '02-floorcovering-sample.png')
 
-# ---------- 03: Herringbone berber carpet ----------
-$bmp3 = New-Bitmap -Width $W -Height $H
-$base = @{ R = 198; G = 184; B = 156 } # warm beige
-$dark = @{ R = 120; G = 96; B = 70 }   # cocoa
-$light = @{ R = 230; G = 220; B = 196 } # cream
-$blockW = 64; $blockH = 16
-for ($y = 0; $y -lt $H; $y++) {
-    $row = [Math]::Floor($y / $blockH)
-    for ($x = 0; $x -lt $W; $x++) {
-        $col = [Math]::Floor($x / $blockW)
-        # herringbone diagonal alternation
-        $diag = ($row + $col) % 2
-        if ($diag -eq 0) {
-            $localX = $x % $blockW
-            $localY = $y % $blockH
-            $stripe = ([Math]::Floor(($localX + $localY * 2) / 4)) % 3
+function New-TileSample {
+    $bitmap = New-Bitmap -Width $W -Height $H
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    for ($row = 0; $row -lt 4; $row++) {
+        for ($col = 0; $col -lt 4; $col++) {
+            Fill-Rect $graphics $swatches[($row * 2 + $col) % $swatches.Count] ($col * 128) ($row * 128) 122 122
+            Fill-Rect $graphics $swatches[4] (($col * 128) + 122) ($row * 128) 6 128
+            Fill-Rect $graphics $swatches[4] ($col * 128) (($row * 128) + 122) 128 6
         }
-        else {
-            $localX = $x % $blockW
-            $localY = $y % $blockH
-            $stripe = ([Math]::Floor(($localX - $localY * 2 + $blockW) / 4)) % 3
-        }
-        switch ($stripe) {
-            0 { $c = $base }
-            1 { $c = $dark }
-            default { $c = $light }
-        }
-        # weave fiber noise
-        $n = $rand.Next(-14, 15)
-        $weave = [Math]::Sin(($x + $y) * 1.3) * 6
-        $r = Clamp([int]($c.R + $n + $weave))
-        $g = Clamp([int]($c.G + $n + $weave))
-        $b = Clamp([int]($c.B + $n + $weave))
-        $bmp3.SetPixel($x, $y, [System.Drawing.Color]::FromArgb($r, $g, $b))
     }
+    $graphics.Dispose()
+    Save-Png -Bitmap $bitmap -Path (Join-Path $outDir '02-floorcovering-sample.png')
 }
-Save-Png -Bitmap $bmp3 -Path (Join-Path $outDir '03-floorcovering-sample.png')
+
+function New-HerringboneSample {
+    $bitmap = New-Bitmap -Width $W -Height $H
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    for ($row = 0; $row -lt 32; $row++) {
+        for ($col = 0; $col -lt 8; $col++) {
+            $colorIndex = if ((($row + $col) % 2) -eq 0) { ($col + 1) % $swatches.Count } else { ($row + 2) % $swatches.Count }
+            Fill-Rect $graphics $swatches[$colorIndex] ($col * 64) ($row * 16) 64 16
+        }
+    }
+    $graphics.Dispose()
+    Save-Png -Bitmap $bitmap -Path (Join-Path $outDir '03-floorcovering-sample.png')
+}
+
+function New-GenericSample {
+    $bitmap = New-Bitmap -Width 16 -Height 16
+    for ($y = 0; $y -lt 16; $y++) {
+        for ($x = 0; $x -lt 16; $x++) {
+            $idx = ([Math]::Floor($x / 4) + [Math]::Floor($y / 4)) % $swatches.Count
+            $bitmap.SetPixel($x, $y, $swatches[$idx])
+        }
+    }
+    Save-Png -Bitmap $bitmap -Path (Join-Path $outDir 'generic-floorcovering-sample.png')
+}
+
+function New-ChevronSample {
+    $bitmap = New-Bitmap -Width $patternW -Height $patternH
+    for ($y = 0; $y -lt $patternH; $y++) {
+        for ($x = 0; $x -lt $patternW; $x++) {
+            $band = [Math]::Floor((($x % 120) + (($y % 80) * 2)) / 24) % $swatches.Count
+            $bitmap.SetPixel($x, $y, $swatches[$band])
+        }
+    }
+    Save-Png -Bitmap $bitmap -Path (Join-Path $outDir 'sample-pattern-chevron.png')
+}
+
+function New-ChannelGridSample {
+    $bitmap = New-Bitmap -Width $patternW -Height $patternH
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    for ($row = 0; $row -lt 4; $row++) {
+        for ($col = 0; $col -lt 6; $col++) {
+            Fill-Rect $graphics $swatches[($row * 2 + $col) % $swatches.Count] ($col * 80) ($row * 80) 80 80
+        }
+    }
+    $graphics.Dispose()
+    Save-Png -Bitmap $bitmap -Path (Join-Path $outDir 'sample-pattern-channel-grid.png')
+}
+
+function New-RegistrationStripeSample {
+    $bitmap = New-Bitmap -Width $patternW -Height $patternH
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    for ($i = 0; $i -lt $swatches.Count; $i++) {
+        Fill-Rect $graphics $swatches[$i] 0 ($i * 64) $patternW 64
+    }
+    foreach ($x in @(48, 138, 228, 318, 408)) {
+        Fill-Rect $graphics $swatches[4] $x 0 18 $patternH
+    }
+    $graphics.Dispose()
+    Save-Png -Bitmap $bitmap -Path (Join-Path $outDir 'sample-pattern-registration-stripes.png')
+}
+
+New-PlankSample
+New-TileSample
+New-HerringboneSample
+New-GenericSample
+New-ChevronSample
+New-ChannelGridSample
+New-RegistrationStripeSample
 
 Write-Host "Done."
