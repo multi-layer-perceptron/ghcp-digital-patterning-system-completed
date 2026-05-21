@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" width="480" height="320" role="img" aria-labelledby="title desc">
+  <title id="title">Sample manufacturing channel grid</title>
+  <desc id="desc">A tile-like grid pattern with distinct color blocks for channel mapping tests.</desc>
+  <rect width="480" height="320" fill="#ece7dc"/>
+  <g stroke="#28343a" stroke-width="2">
+    <rect x="0" y="0" width="80" height="80" fill="#2c6f91"/>
+    <rect x="80" y="0" width="80" height="80" fill="#d2a13d"/>
+    <rect x="160" y="0" width="80" height="80" fill="#7b8f45"/>
+    <rect x="240" y="0" width="80" height="80" fill="#b9573f"/>
+    <rect x="320" y="0" width="80" height="80" fill="#3e4f63"/>
+    <rect x="400" y="0" width="80" height="80" fill="#ece7dc"/>
+    <rect x="0" y="80" width="80" height="80" fill="#7b8f45"/>
+    <rect x="80" y="80" width="80" height="80" fill="#ece7dc"/>
+    <rect x="160" y="80" width="80" height="80" fill="#2c6f91"/>
+    <rect x="240" y="80" width="80" height="80" fill="#d2a13d"/>
+    <rect x="320" y="80" width="80" height="80" fill="#b9573f"/>
+    <rect x="400" y="80" width="80" height="80" fill="#3e4f63"/>
+    <rect x="0" y="160" width="80" height="80" fill="#b9573f"/>
+    <rect x="80" y="160" width="80" height="80" fill="#3e4f63"/>
+    <rect x="160" y="160" width="80" height="80" fill="#ece7dc"/>
+    <rect x="240" y="160" width="80" height="80" fill="#7b8f45"/>
+    <rect x="320" y="160" width="80" height="80" fill="#2c6f91"/>
+    <rect x="400" y="160" width="80" height="80" fill="#d2a13d"/>
+    <rect x="0" y="240" width="80" height="80" fill="#d2a13d"/>
+    <rect x="80" y="240" width="80" height="80" fill="#b9573f"/>
+    <rect x="160" y="240" width="80" height="80" fill="#3e4f63"/>
+    <rect x="240" y="240" width="80" height="80" fill="#2c6f91"/>
+    <rect x="320" y="240" width="80" height="80" fill="#ece7dc"/>
+    <rect x="400" y="240" width="80" height="80" fill="#7b8f45"/>
+  </g>
+</svg>

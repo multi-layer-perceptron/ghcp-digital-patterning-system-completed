@@ -1,0 +1,102 @@
+flowchart LR
+    Operator["Operator or workshop user"]
+    Sample["Sample design PNG or JPEG"]
+
+    subgraph UI["Operator experience"]
+        Dashboard["WPF operator dashboard"]
+        UploadView["Upload view"]
+        ChannelView["Channel mapping view"]
+        SimulationView["Simulation dashboard"]
+        ReportView["Report export view"]
+    end
+
+    subgraph Core["C# domain workflow"]
+        UploadValidation["Upload validation service"]
+        ConceptAnalysis["Concept analysis service"]
+        ChannelMapping["Channel mapping service"]
+        ProductionGrid["Production grid service"]
+        Diagnostics["Diagnostic service"]
+        Lifecycle["Simulation lifecycle service"]
+        ReportBuilder["Concept report builder"]
+    end
+
+    subgraph Native["Native processing layer"]
+        Metadata["C++ metadata extraction"]
+        Palette["C++ palette extraction"]
+        GridConvert["C++ grid conversion"]
+        Commands["C++ command generation"]
+    end
+
+    subgraph Persistence["Optional persistence and exports"]
+        Sql["SQL contract and SQLite validation"]
+        Json["JSON report"]
+        Html["Printable HTML report"]
+    end
+
+    subgraph Control["Control and gateway path"]
+        GatewayHost["C# gateway host"]
+        PlcGateway["PLC gateway stub"]
+        FpgaGateway["FPGA timing gateway stub"]
+        ControlC["C control emulator"]
+        Vhdl["VHDL signal map"]
+        Status["status.update response"]
+        Timing["timing valid response"]
+    end
+
+    Operator --> Dashboard
+    Dashboard --> UploadView
+    Dashboard --> ChannelView
+    Dashboard --> SimulationView
+    Dashboard --> ReportView
+
+    Sample --> UploadView
+    UploadView --> UploadValidation
+    UploadValidation --> ConceptAnalysis
+    ConceptAnalysis --> Metadata
+    ConceptAnalysis --> Palette
+    Palette --> ChannelMapping
+    ChannelView --> ChannelMapping
+    ChannelMapping --> ProductionGrid
+    ProductionGrid --> GridConvert
+    GridConvert --> Commands
+    ChannelMapping --> Diagnostics
+    ProductionGrid --> Diagnostics
+
+    Diagnostics -->|"blocking issue"| Dashboard
+    Diagnostics -->|"clear to run"| Lifecycle
+    SimulationView --> Lifecycle
+    Lifecycle --> GatewayHost
+    GatewayHost --> PlcGateway
+    GatewayHost --> FpgaGateway
+    PlcGateway --> ControlC
+    FpgaGateway --> Vhdl
+    ControlC --> Status
+    Vhdl --> Timing
+    Status --> Lifecycle
+    Timing --> Lifecycle
+
+    UploadValidation --> Sql
+    ChannelMapping --> Sql
+    ProductionGrid --> Sql
+    Lifecycle --> Sql
+    Diagnostics --> ReportBuilder
+    Lifecycle --> ReportBuilder
+    ReportView --> ReportBuilder
+    ReportBuilder --> Json
+    ReportBuilder --> Html
+    Json --> Operator
+    Html --> Operator
+
+    classDef entry fill:#f5f0e8,stroke:#6b5b45,color:#1f2528
+    classDef ui fill:#e8f1f5,stroke:#2c6f91,color:#10242f
+    classDef core fill:#efeaf7,stroke:#7157a8,color:#211735
+    classDef native fill:#edf4e6,stroke:#5f7d4c,color:#1f2c1d
+    classDef data fill:#fff3d6,stroke:#c59a36,color:#332710
+    classDef control fill:#f7e8e3,stroke:#b54a35,color:#321711
+
+    class Operator,Sample entry
+    class Dashboard,UploadView,ChannelView,SimulationView,ReportView ui
+    class UploadValidation,ConceptAnalysis,ChannelMapping,ProductionGrid,Diagnostics,Lifecycle,ReportBuilder core
+    class Metadata,Palette,GridConvert,Commands native
+    class Sql,Json,Html data
+    class GatewayHost,PlcGateway,FpgaGateway,ControlC,Vhdl,Status,Timing control

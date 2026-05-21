@@ -472,7 +472,7 @@ dotnet run --project workspace/csharp/Patterning.GatewayHost -- --gateway fpga -
 
 ## Appendix
 
-- Related infographic: [images/digitial-patterning-infographic.svg](images/digitial-patterning-infographic.svg)
+- Related infographic: [images/solution-architecture.mmd](images/solution-architecture.mmd)
 - Root README: [../README.md](../README.md)
 - Feature quickstart: [../specs/001-digital-patterning-simulator/quickstart.md](../specs/001-digital-patterning-simulator/quickstart.md)
 - TCP/IP contract: [../specs/001-digital-patterning-simulator/contracts/tcp-command-protocol.md](../specs/001-digital-patterning-simulator/contracts/tcp-command-protocol.md)

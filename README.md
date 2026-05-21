@@ -497,7 +497,7 @@ specs/001-digital-patterning-simulator/
   contracts/                       TCP/IP and SQL contracts
 docs/
   prd-specify-digital-patterning-system.md
-  images/digitial-patterning-infographic.svg
+  images/solution-architecture.mmd
 ```
 
 ## Control Flow
@@ -571,7 +571,7 @@ flowchart LR
 - The project is generic and uses synthetic sample data.
 - The WPF dashboard is a Windows desktop surface; Codespaces is for validation and service stubs.
 - The SQL Server-compatible contract is preserved, while repeatable local validation uses SQLite in Docker.
-- The `digitial` spelling in the infographic file name is retained to match the existing repository asset path.
+- The solution architecture infographic source lives at `docs/images/solution-architecture.mmd`.
 
 ## License
 
