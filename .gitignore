@@ -30,3 +30,44 @@ __pycache__/
 # Local Python virtual environment
 .venv/
 workspace/.venv/
+
+# Node.js dependencies
+node_modules/
+workspace/node_modules/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/*
+!.vscode/tasks.json
+.idea/
+
+# Python build outputs
+dist/
+build/
+*.egg-info/
+
+# .NET build outputs
+bin/
+obj/
+*.user
+*.suo
+packages/
+
+# C/C++ build outputs
+out/
+*.o
+*.so
+*.a
+*.exe
+*.dll
+
+# FPGA/VHDL simulator outputs
+work-*.cf
+
+# Local environment files
+.env*
+
+.fake

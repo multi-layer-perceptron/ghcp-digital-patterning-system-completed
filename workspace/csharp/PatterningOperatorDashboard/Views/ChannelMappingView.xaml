@@ -1,0 +1,90 @@
+<UserControl x:Class="PatterningOperatorDashboard.Views.ChannelMappingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:PatterningOperatorDashboard.Views">
+  <UserControl.Resources>
+    <local:HexToColorConverter x:Key="HexToColorConverter" />
+  </UserControl.Resources>
+  <Grid Margin="16">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <TextBlock Grid.Row="0" Text="Channel Mapping" FontSize="20" FontWeight="SemiBold" />
+
+    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,12,0,0">
+      <Button x:Name="AutoAssignButton" Content="Auto-Assign" Padding="12,6" Click="AutoAssignButton_Click" />
+      <Button x:Name="ApplyButton" Content="Apply Mapping" Padding="12,6" Margin="8,0,0,0" Click="ApplyButton_Click" />
+      <Button x:Name="ResetButton" Content="Reset" Padding="12,6" Margin="8,0,0,0" Click="ResetButton_Click" />
+    </StackPanel>
+
+    <TextBlock Grid.Row="2"
+               Text="{Binding StatusMessage}"
+               Margin="0,8,0,0"
+               TextWrapping="Wrap"
+               Foreground="#444" />
+
+    <Border Grid.Row="3" BorderBrush="#777" BorderThickness="1" Margin="0,12,0,0" Padding="8">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Palette → Channel" FontWeight="SemiBold" />
+
+        <DataGrid Grid.Row="1"
+                  Margin="0,6,0,0"
+                  ItemsSource="{Binding Rows}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  HeadersVisibility="Column"
+                  GridLinesVisibility="Horizontal"
+                  RowHeight="32"
+                  SelectionMode="Single">
+          <DataGrid.Columns>
+            <DataGridTemplateColumn Header="Swatch" Width="60" IsReadOnly="True">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <Border Width="22" Height="22" BorderBrush="#444" BorderThickness="1" HorizontalAlignment="Center">
+                    <Border.Background>
+                      <SolidColorBrush Color="{Binding Color.Hex, Converter={StaticResource HexToColorConverter}}" />
+                    </Border.Background>
+                  </Border>
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTextColumn Header="Label" Binding="{Binding Color.Label}" Width="100" IsReadOnly="True" />
+            <DataGridTextColumn Header="Hex" Binding="{Binding Color.Hex}" Width="90" IsReadOnly="True" />
+            <DataGridTextColumn Header="Coverage" Binding="{Binding Color.CoveragePercent, StringFormat={}{0:0.0}%}" Width="80" IsReadOnly="True" />
+            <DataGridTemplateColumn Header="Channel" Width="200">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <ComboBox ItemsSource="{Binding DataContext.Channels, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            DisplayMemberPath="Label"
+                            SelectedValuePath="Id"
+                            SelectedValue="{Binding SelectedChannelId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectionChanged="ChannelComboBox_SelectionChanged" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100" IsReadOnly="True" />
+            <DataGridTextColumn Header="Δ" Binding="{Binding Delta, StringFormat={}{0:0.0}}" Width="60" IsReadOnly="True" />
+          </DataGrid.Columns>
+        </DataGrid>
+
+        <TextBlock Grid.Row="2"
+                   Margin="0,8,0,0"
+                   Text="Edit channel labels and colors on the upcoming Channels editor (workshop iteration). Today, the default 8-channel palette is available for mapping."
+                   TextWrapping="Wrap"
+                   Foreground="#888"
+                   FontStyle="Italic" />
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>

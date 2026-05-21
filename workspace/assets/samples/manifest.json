@@ -1,0 +1,11 @@
+{
+  "samples": [
+    {
+      "id": "generic-floorcovering-sample",
+      "name": "Generic Floorcovering Sample",
+      "image": "generic-floorcovering-sample.png",
+      "metadata": "generic-floorcovering-sample.json",
+      "confidentiality": "synthetic"
+    }
+  ]
+}

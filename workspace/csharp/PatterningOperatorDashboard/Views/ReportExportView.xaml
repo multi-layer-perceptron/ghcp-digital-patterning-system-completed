@@ -1,0 +1,111 @@
+<UserControl x:Class="PatterningOperatorDashboard.Views.ReportExportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Grid Margin="16">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <TextBlock Grid.Row="0" Text="Reports" FontSize="20" FontWeight="SemiBold" />
+    <TextBlock Grid.Row="1" Text="{Binding StatusMessage}" Margin="0,4,0,0" TextWrapping="Wrap" Foreground="#444" />
+
+    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,12,0,0">
+      <Button x:Name="GenerateButton" Content="Generate Report" Width="140" Margin="0,0,8,0" Click="GenerateButton_Click" />
+      <Button x:Name="ExportJsonButton" Content="Export JSON" Width="110" Margin="0,0,8,0"
+              IsEnabled="{Binding CanExport}" Click="ExportJsonButton_Click" />
+      <Button x:Name="ExportHtmlButton" Content="Export HTML" Width="110"
+              IsEnabled="{Binding CanExport}" Click="ExportHtmlButton_Click" />
+    </StackPanel>
+
+    <Border Grid.Row="3" Margin="0,12,0,0" Padding="12" BorderBrush="#DDD" BorderThickness="1" CornerRadius="4">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="130" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Concept:" FontWeight="SemiBold" Margin="0,0,8,4" />
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ConceptSummary}" Margin="0,0,0,4" TextWrapping="Wrap" />
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Palette:" FontWeight="SemiBold" Margin="0,0,8,4" />
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding PaletteSummary}" Margin="0,0,0,4" TextWrapping="Wrap" />
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Channels:" FontWeight="SemiBold" Margin="0,0,8,4" />
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ChannelsSummary}" Margin="0,0,0,4" TextWrapping="Wrap" />
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Grid:" FontWeight="SemiBold" Margin="0,0,8,4" />
+        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GridSummary}" Margin="0,0,0,4" TextWrapping="Wrap" />
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Simulation:" FontWeight="SemiBold" Margin="0,0,8,4" />
+        <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding SimulationSummary}" Margin="0,0,0,4" TextWrapping="Wrap" />
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Diagnostics:" FontWeight="SemiBold" Margin="0,0,8,0" />
+        <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding DiagnosticsSummary}" TextWrapping="Wrap" />
+      </Grid>
+    </Border>
+
+    <Grid Grid.Row="4" Margin="0,12,0,0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+
+      <Border Grid.Column="0" Margin="0,0,6,0" Padding="12" BorderBrush="#DDD" BorderThickness="1" CornerRadius="4">
+        <DockPanel>
+          <TextBlock DockPanel.Dock="Top" Text="Palette colors" FontWeight="SemiBold" Margin="0,0,0,6" />
+          <ListBox ItemsSource="{Binding PaletteColors}" BorderThickness="0" Background="Transparent">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <StackPanel Orientation="Horizontal" Margin="0,2">
+                  <Border Width="18" Height="18" CornerRadius="2" BorderBrush="#888" BorderThickness="1"
+                          Margin="0,0,8,0">
+                    <Border.Background>
+                      <SolidColorBrush Color="{Binding Hex}" />
+                    </Border.Background>
+                  </Border>
+                  <TextBlock Text="{Binding Hex}" FontFamily="Consolas" Width="80" />
+                  <TextBlock Text="{Binding Label}" Width="120" />
+                  <TextBlock Text="{Binding CoveragePercent, StringFormat={}{0:0.#}%}" Width="60" />
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </Border>
+
+      <Border Grid.Column="1" Margin="6,0,0,0" Padding="12" BorderBrush="#DDD" BorderThickness="1" CornerRadius="4">
+        <DockPanel>
+          <TextBlock DockPanel.Dock="Top" Text="Manufacturability diagnostics" FontWeight="SemiBold" Margin="0,0,0,6" />
+          <ListBox ItemsSource="{Binding Diagnostics}" BorderThickness="0" Background="Transparent">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <StackPanel Margin="0,2">
+                  <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Severity}" FontWeight="SemiBold" Width="80" />
+                    <TextBlock Text="{Binding Category}" Foreground="#666" />
+                  </StackPanel>
+                  <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </Border>
+    </Grid>
+
+    <TextBlock Grid.Row="5" Text="{Binding LastExportPath, StringFormat='Last export: {0}'}" Margin="0,12,0,0" Foreground="#555" />
+  </Grid>
+</UserControl>

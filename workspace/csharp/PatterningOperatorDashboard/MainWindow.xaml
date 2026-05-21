@@ -1,0 +1,19 @@
+<Window x:Class="PatterningOperatorDashboard.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Digital Patterning Simulator" Height="720" Width="1080">
+  <TabControl>
+    <TabItem Header="Upload">
+      <Frame Source="Views/UploadDesignView.xaml" />
+    </TabItem>
+    <TabItem Header="Channels">
+      <Frame Source="Views/ChannelMappingView.xaml" />
+    </TabItem>
+    <TabItem Header="Simulation">
+      <Frame Source="Views/SimulationDashboardView.xaml" />
+    </TabItem>
+    <TabItem Header="Reports">
+      <Frame Source="Views/ReportExportView.xaml" />
+    </TabItem>
+  </TabControl>
+</Window>
